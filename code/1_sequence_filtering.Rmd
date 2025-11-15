@@ -1,0 +1,192 @@
+---
+title: "filtering sequences using DADA2"
+author: "Kimberly Ledger"
+date: "2025-11-13"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+DADA2 processing of trimmed reads (i.e. primer sequences already removed)
+
+load packages
+```{r, warning=FALSE}
+library(dada2)
+```
+
+when running this code here are the only things that need to be customized
+- file path 
+- filter parameters and truncate lengths  
+- merged sequence length filter 
+
+name file path and check correct files are there - UPDATE FILE PATH DEPENDING ON DATASET - this should point to the trimmed folder
+```{r}
+path <- "/Users/kimberly.ledger/Documents/noaa-afsc-pinksalmon_herring_stomachs/fastq/trimmed/"
+head(list.files(path))
+```
+
+create lists for the forward and reverse fastq files 
+```{r}
+# Forward and reverse fastq filenames have format: SAMPLENAME-N_SX_R1.fastq and SAMPLENAME-N_SX_R2.fastq
+
+fnFs <- sort(list.files(path, pattern="_R1.fastq", full.names = TRUE))
+fnRs <- sort(list.files(path, pattern="_R2.fastq", full.names = TRUE))
+
+# Extract sample names, assuming filenames have format: SAMPLENAME_XXX.fastq
+sample.names <- sapply(strsplit(basename(fnFs), "_"), `[`, 1)
+```
+
+## inspect read quality 
+
+visualize quality of forward reads 
+```{r, warning=FALSE}
+plotQualityProfile(fnFs[1:2])
+```
+
+visualize quality of reverse reads
+```{r, warning=FALSE}
+plotQualityProfile(fnRs[1:2])
+```
+
+
+## filter and trim 
+
+assign filenames 
+```{r}
+# Place filtered files in filtered/ subdirectory
+filtFs <- file.path(path, "filtered", paste0(sample.names, "_F_filt.fastq.gz"))
+filtRs <- file.path(path, "filtered", paste0(sample.names, "_R_filt.fastq.gz"))
+names(filtFs) <- sample.names
+names(filtRs) <- sample.names
+```
+
+
+**edit this code for trimming**
+Use standard filtering parameters: maxN=0 (DADA2 requires no Ns), truncQ=2, rm.phix=TRUE and maxEE=2.
+
+mifish sequences: truncLen=c(100,100)
+```{r}
+out <- filterAndTrim(fnFs, filtFs, fnRs, filtRs, truncLen=c(100,100),
+              maxN=0, maxEE=c(2,2), truncQ=2, rm.phix=TRUE,
+              compress=TRUE, multithread=FALSE) # On Windows set multithread=FALSE
+head(out)
+```
+
+
+## learn the error rates 
+this takes a few minutes to run
+```{r}
+errF <- learnErrors(filtFs, multithread=TRUE)
+errR <- learnErrors(filtRs, multithread=TRUE)
+```
+
+
+## subset to include filtFs and filtRs where files exist
+```{r}
+filtFs <- filtFs[file.exists(filtFs)]
+filtRs <- filtRs[file.exists(filtRs)]
+```
+
+## apply the sample inference to the filtered and trimmed reads
+```{r, results= "hide"}
+dadaFs <- dada(filtFs, err=errF, multithread=TRUE)
+dadaRs <- dada(filtRs, err=errR, multithread=TRUE)
+```
+
+take a look at the output
+```{r}
+dadaFs[[1]]
+```
+
+## merge paired reads
+```{r, warnings = FALSE, results= "hide"}
+mergers <- mergePairs(dadaFs, filtFs, dadaRs, filtRs, verbose=TRUE, minOverlap = 8, maxMismatch = 2)
+```
+
+
+Inspect the merger data.frame from the first sample
+```{r}
+head(mergers[[1]])
+```
+
+
+## construct sequence table 
+```{r}
+seqtab <- makeSequenceTable(mergers)
+dim(seqtab)
+```
+
+Inspect distribution of sequence lengths
+```{r}
+table(nchar(getSequences(seqtab)))
+```
+
+Remove sequences that are much longer or shorter than expected
+```{r}
+seqtab2 <- seqtab[,nchar(colnames(seqtab)) %in% c(164:185)] #mifish
+```
+
+Remove chimeras
+```{r}
+seqtab.nochim <- removeBimeraDenovo(seqtab2, method="consensus", multithread=TRUE, verbose=TRUE)
+dim(seqtab.nochim)
+sum(seqtab.nochim)/sum(seqtab2)
+```
+
+Track reads through the pipeline
+```{r}
+getN <- function(x) sum(getUniques(x))
+track <- cbind(out, sapply(dadaFs, getN), sapply(dadaRs, getN), sapply(mergers, getN), rowSums(seqtab2), rowSums(seqtab.nochim))
+# If processing a single sample, remove the sapply calls: e.g. replace sapply(dadaFs, getN) with getN(dadaFs)
+colnames(track) <- c("input", "filtered", "denoisedF", "denoisedR", "merged", "correct_length","nonchim")
+rownames(track) <- sample.names
+head(track)
+```
+
+export dada2 filtering summary 
+```{r}
+out_path <- file.path(path, "filtered", "outputs")
+
+write.csv(track, file = file.path(out_path, "track.csv"))
+```
+
+## export for taxonomic identification
+we will want to use the "seqtab.nochim" ASV table for taxonomic analyses
+```{r}
+write.csv(seqtab.nochim, file.path(out_path, "seqtab.csv"))
+```
+
+## also export the seqtab as a Fasta
+```{r}
+sq <- getSequences(seqtab.nochim)
+id <- paste0("ASV", 1:length(sq))
+
+library(seqinr)
+write.fasta(sequences = as.list(sq), names=id, file.out = file.path(out_path, "myasvs.fasta"))
+```
+
+## and export the seqtab table with the numbered ASVs headers that correspond to those output in the FASTA file.
+```{r}
+# Make map between brief names and full sequences
+briefToSeq <- colnames(seqtab.nochim)
+names(briefToSeq) <- paste0("ASV", seq(ncol(seqtab.nochim))) # Seq1, Seq2, ...
+# Make new sequence table with brief names
+st.brief <- seqtab.nochim
+colnames(st.brief) <- names(briefToSeq)
+
+# export the seq table with brief names:
+write.csv(st.brief, file= file.path(out_path, "ASVtable.csv"))
+```
+
+
+## create table of ASV labels and ASV sequences
+```{r}
+asv <- colnames(seqtab.nochim)
+asv_id <- paste0("ASV", 1:length(asv))
+asv_table <- data.frame(asv, asv_id)
+
+write.csv(asv_table, file = file.path(out_path, "asv_id.csv"))
+```
+

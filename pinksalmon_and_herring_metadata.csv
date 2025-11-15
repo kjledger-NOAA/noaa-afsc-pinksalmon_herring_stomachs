@@ -1,0 +1,280 @@
+﻿extraction_ID,FishNum,FishID,Species,collection_year,collection_month,collection_day,location1,location2,sample_type,extraction_by,extraction_date,plate_or_vial,extraction_plate,extraction_well,sequence_date
+e02836,,23-5-1,PacificHerring,2023,5,24,Site 1,Prince William Sound,sample,JLM,10/26/23,vial,27_2023,A1,2023_11_15
+e02837,,23-5-2,PacificHerring,2023,5,24,Site 1,Prince William Sound,sample,JLM,10/26/23,vial,27_2023,B1,2023_11_15
+e02838,,23-5-3,PacificHerring,2023,5,24,Site 1,Prince William Sound,sample,JLM,10/26/23,vial,27_2023,C1,2023_11_15
+e02839,,23-5-4,PacificHerring,2023,5,24,Site 1,Prince William Sound,sample,JLM,10/26/23,vial,27_2023,D1,2023_11_15
+e02840,,23-5-5,PacificHerring,2023,5,24,Site 1,Prince William Sound,sample,JLM,10/26/23,vial,27_2023,E1,2023_11_15
+e02841,,23-5-6,PacificHerring,2023,5,24,Site 1,Prince William Sound,sample,JLM,11/2/23,vial,27_2023,F1,2023_11_15
+e02842,,23-5-7,PacificHerring,2023,5,24,Site 1,Prince William Sound,sample,JLM,10/26/23,vial,27_2023,G1,2023_11_15
+e02843,,23-5-8,PacificHerring,2023,5,24,Site 1,Prince William Sound,sample,JLM,10/26/23,vial,27_2023,H1,2023_11_15
+e02844,,23-5-9,PacificHerring,2023,5,24,Site 1,Prince William Sound,sample,JLM,10/31/23,vial,27_2023,A2,2023_11_15
+e02845,,23-5-10,PacificHerring,2023,5,24,Site 1,Prince William Sound,sample,JLM,10/30/23,vial,27_2023,B2,2023_11_15
+e02846,,23-5-12,PacificHerring,2023,5,24,Site 2,Prince William Sound,sample,JLM,10/30/23,vial,27_2023,C2,2023_11_15
+e02847,,23-5-13,PacificHerring,2023,5,24,Site 2,Prince William Sound,sample,JLM,10/26/23,vial,27_2023,D2,2023_11_15
+e02848,,23-5-14,PacificHerring,2023,5,24,Site 2,Prince William Sound,sample,JLM,11/2/23,vial,27_2023,E2,2023_11_15
+e02849,,23-5-15,PacificHerring,2023,5,24,Site 2,Prince William Sound,sample,JLM,10/26/23,vial,27_2023,F2,2023_11_15
+e02850,,23-5-18,PacificHerring,2023,5,24,Site 2,Prince William Sound,sample,JLM,10/31/23,vial,27_2023,G2,2023_11_15
+e02851,,23-5-17,PacificHerring,2023,5,24,Site 2,Prince William Sound,sample,JLM,11/2/23,vial,27_2023,H2,2023_11_15
+e02852,,23-5-18,PacificHerring,2023,5,24,Site 2,Prince William Sound,sample,JLM,10/31/23,vial,27_2023,A3,2023_11_15
+e02853,,23-5-19,PacificHerring,2023,5,24,Site 2,Prince William Sound,sample,JLM,11/2/23,vial,27_2023,B3,2023_11_15
+e02854,,23-5-20,PacificHerring,2023,5,24,Site 2,Prince William Sound,sample,JLM,11/2/23,vial,27_2023,C3,2023_11_15
+e02855,,23-5-21,PacificHerring,2023,5,24,Site 2,Prince William Sound,sample,JLM,10/31/23,vial,27_2023,D3,2023_11_15
+e02856,,23-5-71,PacificHerring,2023,5,25,Site 5,Prince William Sound,sample,JLM,11/2/23,vial,27_2023,E3,2023_11_15
+e02857,,23-5-72,PacificHerring,2023,5,25,Site 5,Prince William Sound,sample,JLM,11/2/23,vial,27_2023,F3,2023_11_15
+e02858,,23-5-73,PacificHerring,2023,5,25,Site 5,Prince William Sound,sample,JLM,10/31/23,vial,27_2023,G3,2023_11_15
+e02859,,23-5-74,PacificHerring,2023,5,25,Site 5,Prince William Sound,sample,JLM,10/26/23,vial,27_2023,H3,2023_11_15
+e02860,,23-5-75,PacificHerring,2023,5,25,Site 5,Prince William Sound,sample,JLM,11/2/23,vial,27_2023,A4,2023_11_15
+e02861,,23-5-76,PacificHerring,2023,5,25,Site 5,Prince William Sound,sample,JLM,11/2/23,vial,27_2023,B4,2023_11_15
+e02862,,23-5-77,PacificHerring,2023,5,25,Site 5,Prince William Sound,sample,JLM,10/31/23,vial,27_2023,C4,2023_11_15
+e02863,,23-5-78,PacificHerring,2023,5,25,Site 5,Prince William Sound,sample,JLM,11/1/23,vial,27_2023,D4,2023_11_15
+e02864,,23-5-79,PacificHerring,2023,5,25,Site 5,Prince William Sound,sample,JLM,11/2/23,vial,27_2023,E4,2023_11_15
+e02865,,23-5-80,PacificHerring,2023,5,25,Site 5,Prince William Sound,sample,JLM,11/2/23,vial,27_2023,F4,2023_11_15
+e02866,,23-5-77,PacificHerring,2023,5,25,Site 5,Prince William Sound,sample,JLM,10/31/23,vial,27_2023,G4,2023_11_15
+e02867,,23-5-166,PacificHerring,2023,5,26,Site 7,Prince William Sound,sample,JLM,10/31/23,vial,27_2023,H4,2023_11_15
+e02868,,23-5-167,PacificHerring,2023,5,26,Site 7,Prince William Sound,sample,JLM,10/31/23,vial,27_2023,A5,2023_11_15
+e02869,,23-5-168,PacificHerring,2023,5,26,Site 7,Prince William Sound,sample,JLM,11/2/23,vial,27_2023,B5,2023_11_15
+e02870,,23-5-169,PacificHerring,2023,5,26,Site 7,Prince William Sound,sample,JLM,11/2/23,vial,27_2023,C5,2023_11_15
+e02871,,23-5-170,PacificHerring,2023,5,26,Site 7,Prince William Sound,sample,JLM,11/1/23,vial,27_2023,D5,2023_11_15
+e02872,,23-5-171,PacificHerring,2023,5,26,Site 7,Prince William Sound,sample,JLM,11/1/23,vial,27_2023,E5,2023_11_15
+e02873,,23-5-172,PacificHerring,2023,5,26,Site 7,Prince William Sound,sample,JLM,11/1/23,vial,27_2023,F5,2023_11_15
+e02874,,23-5-173,PacificHerring,2023,5,26,Site 7,Prince William Sound,sample,JLM,11/1/23,vial,27_2023,G5,2023_11_15
+e02875,,23-5-174,PacificHerring,2023,5,26,Site 7,Prince William Sound,sample,JLM,11/2/23,vial,27_2023,H5,2023_11_15
+e02876,,23-5-175,PacificHerring,2023,5,26,Site 7,Prince William Sound,sample,JLM,11/2/23,vial,27_2023,A6,2023_11_15
+e02877,,23-5-171,PacificHerring,2023,5,26,Site 7,Prince William Sound,sample,JLM,11/1/23,vial,27_2023,B6,2023_11_15
+e02878,,23-5-173,PacificHerring,2023,5,26,Site 7,Prince William Sound,sample,JLM,11/1/23,vial,27_2023,C6,2023_11_15
+e02879,,23-5-179,PacificHerring,2023,5,27,Site 8,Prince William Sound,sample,JLM,11/1/23,vial,27_2023,D6,2023_11_15
+e02880,,23-5-180,PacificHerring,2023,5,27,Site 8,Prince William Sound,sample,JLM,11/1/23,vial,27_2023,E6,2023_11_15
+e02881,,23-5-181,PacificHerring,2023,5,27,Site 8,Prince William Sound,sample,JLM,11/1/23,vial,27_2023,F6,2023_11_15
+e02882,,23-5-182,PacificHerring,2023,5,27,Site 8,Prince William Sound,sample,JLM,11/2/23,vial,27_2023,G6,2023_11_15
+e02883,,23-5-183,PacificHerring,2023,5,27,Site 8,Prince William Sound,sample,JLM,11/1/23,vial,27_2023,H6,2023_11_15
+e02884,,23-5-184,PacificHerring,2023,5,27,Site 8,Prince William Sound,sample,JLM,11/1/23,vial,27_2023,A7,2023_11_15
+e02885,,23-5-185,PacificHerring,2023,5,27,Site 8,Prince William Sound,sample,JLM,10/30/23,vial,27_2023,B7,2023_11_15
+e02886,,23-5-186,PacificHerring,2023,5,27,Site 8,Prince William Sound,sample,JLM,10/30/23,vial,27_2023,C7,2023_11_15
+e02887,,23-5-213,PacificHerring,2023,5,28,Site 9,Prince William Sound,sample,JLM,10/30/23,vial,27_2023,D7,2023_11_15
+e02888,,23-5-214,PacificHerring,2023,5,28,Site 9,Prince William Sound,sample,JLM,10/30/23,vial,27_2023,E7,2023_11_15
+e02889,,23-5-215,PacificHerring,2023,5,28,Site 9,Prince William Sound,sample,JLM,10/30/23,vial,27_2023,F7,2023_11_15
+e02890,,23-5-185,PacificHerring,2023,5,27,Site 8,Prince William Sound,sample,JLM,10/30/23,vial,27_2023,G7,2023_11_15
+e02891,,23-5-217,PacificHerring,2023,5,28,Site 9,Prince William Sound,sample,JLM,11/1/23,vial,27_2023,H7,2023_11_15
+e02892,,23-5-218,PacificHerring,2023,5,28,Site 9,Prince William Sound,sample,JLM,10/30/23,vial,27_2023,A8,2023_11_15
+e02893,,23-5-219,PacificHerring,2023,5,28,Site 9,Prince William Sound,sample,JLM,11/1/23,vial,27_2023,B8,2023_11_15
+e02894,,23-5-220,PacificHerring,2023,5,28,Site 9,Prince William Sound,sample,JLM,11/1/23,vial,27_2023,C8,2023_11_15
+e02895,,23-5-221,PacificHerring,2023,5,28,Site 9,Prince William Sound,sample,JLM,10/30/23,vial,27_2023,D8,2023_11_15
+e02896,,23-5-222,PacificHerring,2023,5,28,Site 9,Prince William Sound,sample,JLM,10/30/23,vial,27_2023,E8,2023_11_15
+e02897,,23-5-247,PacificHerring,2023,5,28,Site 10,Prince William Sound,sample,JLM,10/30/23,vial,27_2023,F8,2023_11_15
+e02898,,23-5-248,PacificHerring,2023,5,28,Site 10,Prince William Sound,sample,JLM,10/30/23,vial,27_2023,G8,2023_11_15
+e02899,,23-5-249,PacificHerring,2023,5,28,Site 10,Prince William Sound,sample,JLM,11/1/23,vial,27_2023,H8,2023_11_15
+e02900,,23-5-250,PacificHerring,2023,5,28,Site 10,Prince William Sound,sample,JLM,11/1/23,vial,27_2023,A10,2023_11_15
+e02901,,23-5-251,PacificHerring,2023,5,28,Site 10,Prince William Sound,sample,JLM,11/1/23,vial,27_2023,B10,2023_11_15
+e02902,,23-5-252,PacificHerring,2023,5,28,Site 10,Prince William Sound,sample,JLM,11/1/23,vial,27_2023,C10,2023_11_15
+e02903,,23-5-253,PacificHerring,2023,5,28,Site 10,Prince William Sound,sample,JLM,11/2/23,vial,27_2023,D10,2023_11_15
+e02904,,23-5-254,PacificHerring,2023,5,28,Site 10,Prince William Sound,sample,JLM,11/1/23,vial,27_2023,E10,2023_11_15
+e02905,,23-5-255,PacificHerring,2023,5,28,Site 10,Prince William Sound,sample,JLM,11/2/23,vial,27_2023,F10,2023_11_15
+e02906,,23-5-256,PacificHerring,2023,5,28,Site 10,Prince William Sound,sample,JLM,10/26/23,vial,27_2023,G10,2023_11_15
+e02907,,23-5-293,PacificHerring,2023,5,28,Site 11,Prince William Sound,sample,JLM,10/30/23,vial,27_2023,H10,2023_11_15
+e02908,,23-5-294,PacificHerring,2023,5,28,Site 11,Prince William Sound,sample,JLM,10/30/23,vial,27_2023,A9,2023_11_15
+e02909,,23-5-295,PacificHerring,2023,5,28,Site 11,Prince William Sound,sample,JLM,10/30/23,vial,27_2023,B9,2023_11_15
+e02910,,23-5-296,PacificHerring,2023,5,28,Site 11,Prince William Sound,sample,JLM,11/2/23,vial,27_2023,C9,2023_11_15
+e02911,,23-5-297,PacificHerring,2023,5,28,Site 11,Prince William Sound,sample,JLM,10/26/23,vial,27_2023,D9,2023_11_15
+e02912,,23-5-298,PacificHerring,2023,5,28,Site 11,Prince William Sound,sample,JLM,10/30/23,vial,27_2023,E9,2023_11_15
+e02913,,23-5-299,PacificHerring,2023,5,28,Site 11,Prince William Sound,sample,JLM,11/2/23,vial,27_2023,F9,2023_11_15
+e02914,,23-5-300,PacificHerring,2023,5,28,Site 11,Prince William Sound,sample,JLM,10/26/23,vial,27_2023,G9,2023_11_15
+e02915,,23-5-301,PacificHerring,2023,5,28,Site 11,Prince William Sound,sample,JLM,11/2/23,vial,27_2023,H9,2023_11_15
+e02916,,23-5-302,PacificHerring,2023,5,28,Site 11,Prince William Sound,sample,JLM,10/26/23,vial,27_2023,A11,2023_11_15
+e02917,,23-6-1,PinkSalmon,2023,6,29,Site 1,Prince William Sound,sample,JLM,10/26/23,vial,27_2023,B11,2023_11_15
+e02918,,23-6-2,PinkSalmon,2023,6,29,Site 1,Prince William Sound,sample,JLM,10/26/23,vial,27_2023,C11,2023_11_15
+e02919,,23-6-3,PinkSalmon,2023,6,29,Site 1,Prince William Sound,sample,JLM,10/26/23,vial,27_2023,D11,2023_11_15
+e02920,,23-6-4,PinkSalmon,2023,6,29,Site 1,Prince William Sound,sample,JLM,10/26/23,vial,27_2023,E11,2023_11_15
+e02921,,23-6-5,PinkSalmon,2023,6,29,Site 1,Prince William Sound,sample,JLM,10/26/23,vial,27_2023,F11,2023_11_15
+e02922,,23-6-6,PinkSalmon,2023,6,29,Site 1,Prince William Sound,sample,JLM,10/26/23,vial,27_2023,G11,2023_11_15
+e02923,,23-6-7,PinkSalmon,2023,6,29,Site 1,Prince William Sound,sample,JLM,10/30/23,vial,27_2023,H11,2023_11_15
+e02924,,23-6-8,PinkSalmon,2023,6,29,Site 1,Prince William Sound,sample,JLM,10/30/23,vial,27_2023,A12,2023_11_15
+e02925,,23-6-9,PinkSalmon,2023,6,29,Site 1,Prince William Sound,sample,JLM,10/30/23,vial,27_2023,B12,2023_11_15
+e02926,,23-6-10,PinkSalmon,2023,6,29,Site 1,Prince William Sound,sample,JLM,10/30/23,vial,27_2023,C12,2023_11_15
+e02927,,23-6-51,PinkSalmon,2023,6,30,Site 2,Prince William Sound,sample,JLM,10/30/23,vial,27_2023,D12,2023_11_15
+e02928,,23-6-52,PinkSalmon,2023,6,30,Site 2,Prince William Sound,sample,JLM,10/30/23,vial,27_2023,E12,2023_11_15
+e02929,,23-6-53,PinkSalmon,2023,6,30,Site 2,Prince William Sound,sample,JLM,10/30/23,vial,27_2023,F12,2023_11_15
+e02930,,23-6-54,PinkSalmon,2023,6,30,Site 2,Prince William Sound,sample,JLM,10/30/23,vial,28_2023,A1,2023_11_15
+e02931,,23-6-55,PinkSalmon,2023,6,30,Site 2,Prince William Sound,sample,JLM,10/31/23,vial,28_2023,B1,2023_11_15
+e02932,,23-6-56,PinkSalmon,2023,6,30,Site 2,Prince William Sound,sample,JLM,10/31/23,vial,28_2023,C1,2023_11_15
+e02933,,23-6-57,PinkSalmon,2023,6,30,Site 2,Prince William Sound,sample,JLM,10/30/23,vial,28_2023,D1,2023_11_15
+e02934,,23-6-58,PinkSalmon,2023,6,30,Site 2,Prince William Sound,sample,JLM,10/30/23,vial,28_2023,E1,2023_11_15
+e02935,,23-6-59,PinkSalmon,2023,6,30,Site 2,Prince William Sound,sample,JLM,10/30/23,vial,28_2023,F1,2023_11_15
+e02936,,23-6-60,PinkSalmon,2023,6,30,Site 2,Prince William Sound,sample,JLM,10/31/23,vial,28_2023,G1,2023_11_15
+e02937,,23-6-101,PinkSalmon,2023,6,30,Site 3,Prince William Sound,sample,JLM,10/31/23,vial,28_2023,H1,2023_11_15
+e02938,,23-6-102,PinkSalmon,2023,6,30,Site 3,Prince William Sound,sample,JLM,10/31/23,vial,28_2023,A2,2023_11_15
+e02939,,23-6-103,PinkSalmon,2023,6,30,Site 3,Prince William Sound,sample,JLM,10/31/23,vial,28_2023,B2,2023_11_15
+e02940,,23-6-104,PinkSalmon,2023,6,30,Site 3,Prince William Sound,sample,JLM,10/31/23,vial,28_2023,C2,2023_11_15
+e02941,,23-6-105,PinkSalmon,2023,6,30,Site 3,Prince William Sound,sample,JLM,10/31/23,vial,28_2023,D2,2023_11_15
+e02942,,23-6-106,PinkSalmon,2023,6,30,Site 3,Prince William Sound,sample,JLM,10/31/23,vial,28_2023,E2,2023_11_15
+e02943,,23-6-107,PinkSalmon,2023,6,30,Site 3,Prince William Sound,sample,JLM,10/31/23,vial,28_2023,F2,2023_11_15
+e02944,,23-6-108,PinkSalmon,2023,6,30,Site 3,Prince William Sound,sample,JLM,10/31/23,vial,28_2023,G2,2023_11_15
+e02945,,23-6-109,PinkSalmon,2023,6,30,Site 3,Prince William Sound,sample,JLM,10/31/23,vial,28_2023,H2,2023_11_15
+e02946,,23-6-110,PinkSalmon,2023,6,30,Site 3,Prince William Sound,sample,JLM,10/31/23,vial,28_2023,A3,2023_11_15
+e02947,,23-6-152,PinkSalmon,2023,7,1,Site 4,Prince William Sound,sample,JLM,10/31/23,vial,28_2023,B3,2023_11_15
+e02948,,23-7-1,PinkSalmon,2023,7,10,Site 2,Prince William Sound,sample,JLM,10/30/23,vial,28_2023,C3,2023_11_15
+e02949,,23-7-2,PinkSalmon,2023,7,10,Site 2,Prince William Sound,sample,JLM,10/30/23,vial,28_2023,D3,2023_11_15
+e02950,,23-5-217,PacificHerring,2023,5,28,Site 9,Prince William Sound,sample,JLM,11/1/23,vial,28_2023,E3,2023_11_15
+e02951,,23-7-4,PinkSalmon,2023,7,10,Site 2,Prince William Sound,sample,JLM,10/30/23,vial,28_2023,F3,2023_11_15
+e02952,,23-7-5,PinkSalmon,2023,7,10,Site 2,Prince William Sound,sample,JLM,10/30/23,vial,28_2023,G3,2023_11_15
+e02953,,23-7-6,PinkSalmon,2023,7,10,Site 2,Prince William Sound,sample,JLM,10/30/23,vial,28_2023,H3,2023_11_15
+e02954,,23-7-7,PinkSalmon,2023,7,10,Site 2,Prince William Sound,sample,JLM,10/30/23,vial,28_2023,A4,2023_11_15
+e02955,,23-7-8,PinkSalmon,2023,7,10,Site 2,Prince William Sound,sample,JLM,10/30/23,vial,28_2023,B4,2023_11_15
+e02956,,23-7-9,PinkSalmon,2023,7,11,Site 4,Prince William Sound,sample,JLM,10/30/23,vial,28_2023,C4,2023_11_15
+e02957,,23-7-10,PinkSalmon,2023,7,11,Site 4,Prince William Sound,sample,JLM,10/30/23,vial,28_2023,D4,2023_11_15
+e02958,,23-7-11,PinkSalmon,2023,7,11,Site 4,Prince William Sound,sample,JLM,10/30/23,vial,28_2023,E4,2023_11_15
+e02959,,23-7-12,PinkSalmon,2023,7,11,Site 4,Prince William Sound,sample,JLM,10/30/23,vial,28_2023,F4,2023_11_15
+e02960,,23-7-13,PinkSalmon,2023,7,11,Site 4,Prince William Sound,sample,JLM,10/30/23,vial,28_2023,G4,2023_11_15
+e02961,,23-7-14,PinkSalmon,2023,7,11,Site 4,Prince William Sound,sample,JLM,10/30/23,vial,28_2023,H4,2023_11_15
+e02962,,23-7-15,PinkSalmon,2023,7,11,Site 4,Prince William Sound,sample,JLM,10/30/23,vial,28_2023,A5,2023_11_15
+e02963,,23-7-16,PinkSalmon,2023,7,11,Site 4,Prince William Sound,sample,JLM,10/30/23,vial,28_2023,B5,2023_11_15
+e02964,,23-7-17,PinkSalmon,2023,7,11,Site 4,Prince William Sound,sample,JLM,10/30/23,vial,28_2023,C5,2023_11_15
+e02965,,23-7-18,PinkSalmon,2023,7,11,Site 4,Prince William Sound,sample,JLM,10/30/23,vial,28_2023,D5,2023_11_15
+e02966,,NA,blank,2023,10,13,NA,Prince William Sound,extraction_blank,JLM,10/30/23,vial,28_2023,E5,2023_11_15
+e02967,,NA,blank,2023,10,19,NA,Prince William Sound,extraction_blank,JLM,10/31/23,vial,28_2023,F5,2023_11_15
+e02968,,NA,blank,2023,10,23,NA,Prince William Sound,extraction_blank,JLM,11/1/23,vial,28_2023,G5,2023_11_15
+e02969,,23-5-220,PacificHerring,2023,5,28,Site 9,Prince William Sound,sample,JLM,11/1/23,vial,28_2023,H5,2023_11_15
+e02970,,23-5-253,PacificHerring,2023,5,28,Site 10,Prince William Sound,sample,JLM,11/2/23,vial,28_2023,A6,2023_11_15
+e02971,,23-5-255,PacificHerring,2023,5,28,Site 10,Prince William Sound,sample,JLM,11/2/23,vial,28_2023,B6,2023_11_15
+e02972,,23-5-295,PacificHerring,2023,5,28,Site 11,Prince William Sound,sample,JLM,10/30/23,vial,28_2023,C6,2023_11_15
+e02973,,23-5-298,PacificHerring,2023,5,28,Site 11,Prince William Sound,sample,JLM,10/30/23,vial,28_2023,D6,2023_11_15
+e02974,,23-7-18,PinkSalmon,2023,7,11,Site 4,Prince William Sound,sample,JLM,10/30/23,vial,28_2023,E6,2023_11_15
+PC_27,NA,NA,NA,NA,NA,NA,NA,Prince William Sound,positive,NA,NA,NA,NA,NA,2023_11_15
+NC_27,NA,NA,NA,NA,NA,NA,NA,Prince William Sound,pcr_blank,NA,NA,NA,NA,NA,2023_11_15
+PC_28,NA,NA,NA,NA,NA,NA,NA,Prince William Sound,positive,NA,NA,NA,NA,NA,2023_11_15
+PC_29,NA,NA,NA,NA,NA,NA,NA,Prince William Sound,pcr_blank,NA,NA,NA,NA,NA,2023_11_15
+e05187,174,24-05-174,PacificHerring,2024,5,28,Mummy Bay,Prince William Sound,sample,Jack Manus,25-Jun,vial,50_2025,A1,2025_09_29
+e05188,199,24-05-199,PinkSalmon,2024,6,1,Sheep Bay,Prince William Sound,sample,Jack Manus,25-Jun,vial,50_2025,B1,2025_09_29
+e05189,157,24-05-157,PacificHerring,2024,5,30,Fox Farm,Prince William Sound,sample,Jack Manus,25-Jun,vial,50_2025,C1,2025_09_29
+e05190,332,24-06-332,PinkSalmon,2024,6,12,Chenega Bay,Prince William Sound,sample,Jack Manus,25-Jun,vial,50_2025,D1,2025_09_29
+e05191,208,24-05-208,PinkSalmon,2024,6,1,Sheep Bay,Prince William Sound,sample,Jack Manus,25-Jun,vial,50_2025,E1,2025_09_29
+e05192,415,24-06-415,PinkSalmon,2024,6,27,Chenega Bay,Prince William Sound,sample,Jack Manus,25-Jun,vial,50_2025,F1,2025_09_29
+e05193,285,24-06-285,PinkSalmon,2024,6,11,Sleepy Bay,Prince William Sound,sample,Jack Manus,25-Jun,vial,50_2025,G1,2025_09_29
+e05194,282,24-06-282,PinkSalmon,2024,6,11,Sleepy Bay,Prince William Sound,sample,Jack Manus,25-Jun,vial,50_2025,H1,2025_09_29
+e05195,654,24-07-654,PinkSalmon,2024,7,9,Chenega Bay,Prince William Sound,sample,Jack Manus,25-Jun,vial,50_2025,A2,2025_09_29
+e05196,622,24-07-622,PinkSalmon,2024,7,9,Chenega Bay,Prince William Sound,sample,Jack Manus,25-Jun,vial,50_2025,B2,2025_09_29
+e05197,125,24-05-125,PacificHerring,2024,5,30,Fox Farm,Prince William Sound,sample,Jack Manus,25-Jun,vial,50_2025,C2,2025_09_29
+e05198,143B,24-05-143,PacificHerring,2024,5,30,Fox Farm,Prince William Sound,sample,Jack Manus,25-Jun,vial,50_2025,D2,2025_09_29
+e05199,416,24-06-416,PinkSalmon,2024,6,27,Chenega Bay,Prince William Sound,sample,Jack Manus,25-Jun,vial,50_2025,E2,2025_09_29
+e05200,433,24-06-433,PinkSalmon,2024,6,28,Sleepy Bay,Prince William Sound,sample,Jack Manus,25-Jun,vial,50_2025,F2,2025_09_29
+e05201,291,24-06-291,PinkSalmon,2024,6,11,Sleepy Bay,Prince William Sound,sample,Jack Manus,25-Jun,vial,50_2025,G2,2025_09_29
+e05202,327,24-06-327,PinkSalmon,2024,6,12,POW,Prince William Sound,sample,Jack Manus,25-Jun,vial,50_2025,H2,2025_09_29
+e05203,197,24-05-197,PinkSalmon,2024,6,1,Sheep Bay,Prince William Sound,sample,Jack Manus,25-Jun,vial,50_2025,A3,2025_09_29
+e05204,163,24-05-163,PacificHerring,2024,5,28,Mummy Bay,Prince William Sound,sample,Jack Manus,25-Jun,vial,50_2025,B3,2025_09_29
+e05205,72,24-05-72,PacificHerring,2024,5,31,Hogg Bay,Prince William Sound,sample,Jack Manus,25-Jun,vial,50_2025,C3,2025_09_29
+e05206,143A,24-05-143,PacificHerring,2024,5,30,Fox Farm,Prince William Sound,sample,Jack Manus,25-Jun,vial,50_2025,D3,2025_09_29
+e05207,385,24-06-385,PinkSalmon,2024,6,27,POW,Prince William Sound,sample,Jack Manus,25-Jun,vial,50_2025,E3,2025_09_29
+e05208,479,24-06-479,PinkSalmon,2024,6,28,Pt. Bazil,Prince William Sound,sample,Jack Manus,25-Jun,vial,50_2025,F3,2025_09_29
+e05209,410,24-06-410,PinkSalmon,2024,6,27,Chenega Bay,Prince William Sound,sample,Jack Manus,25-Jun,vial,50_2025,G3,2025_09_29
+e05210,311,24-06-311,PinkSalmon,2024,6,12,POW,Prince William Sound,sample,Jack Manus,25-Jun,vial,50_2025,H3,2025_09_29
+e05211,628,24-07-628,PinkSalmon,2024,7,9,Chenega Bay,Prince William Sound,sample,Jack Manus,25-Jun,vial,50_2025,A4,2025_09_29
+e05212,164,24-05-164,PacificHerring,2024,5,28,Mummy Bay,Prince William Sound,sample,Jack Manus,25-Jun,vial,50_2025,B4,2025_09_29
+e05213,112,24-05-112,PacificHerring,2024,5,30,Fox Farm,Prince William Sound,sample,Jack Manus,25-Jun,vial,50_2025,C4,2025_09_29
+e05214,186,24-05-186,PacificHerring,2024,5,28,Mummy Bay,Prince William Sound,sample,Jack Manus,25-Jun,vial,50_2025,D4,2025_09_29
+e05215,413,24-06-413,PinkSalmon,2024,6,27,Chenega Bay,Prince William Sound,sample,Jack Manus,25-Jun,vial,50_2025,E4,2025_09_29
+e05216,449,24-06-449,PinkSalmon,2024,6,28,Sleepy Bay,Prince William Sound,sample,Jack Manus,25-Jun,vial,50_2025,F4,2025_09_29
+e05217,290,24-06-290,PinkSalmon,2024,6,11,Sleepy Bay,Prince William Sound,sample,Jack Manus,25-Jun,vial,50_2025,G4,2025_09_29
+e05218,288,24-06-288,PinkSalmon,2024,6,11,Sleepy Bay,Prince William Sound,sample,Jack Manus,25-Jun,vial,50_2025,H4,2025_09_29
+e05219,198,24-05-198,PinkSalmon,2024,6,1,Sheep Bay,Prince William Sound,sample,Jack Manus,25-Jun,vial,50_2025,A5,2025_09_29
+e05220,56,24-05-56,PacificHerring,2024,5,31,Squire Point,Prince William Sound,sample,Jack Manus,25-Jun,vial,50_2025,B5,2025_09_29
+e05221,215,24-05-215,PinkSalmon,2024,6,1,Sheep Bay,Prince William Sound,sample,Jack Manus,25-Jun,vial,50_2025,C5,2025_09_29
+e05222,147,24-05-147,PacificHerring,2024,5,30,Fox Farm,Prince William Sound,sample,Jack Manus,25-Jun,vial,50_2025,D5,2025_09_29
+e05223,402,24-06-402,PinkSalmon,2024,6,27,POW,Prince William Sound,sample,Jack Manus,25-Jun,vial,50_2025,E5,2025_09_29
+e05224,468,24-06-468,PinkSalmon,2024,6,28,Pt. Bazil,Prince William Sound,sample,Jack Manus,25-Jun,vial,50_2025,F5,2025_09_29
+e05225,451,24-06-451,PinkSalmon,2024,6,28,Sleepy Bay,Prince William Sound,sample,Jack Manus,25-Jun,vial,50_2025,G5,2025_09_29
+e05226,348,24-06-348,PinkSalmon,2024,6,12,Chenega Bay,Prince William Sound,sample,Jack Manus,25-Jun,vial,50_2025,H5,2025_09_29
+e05227,659,24-07-659,PinkSalmon,2024,7,9,Chenega Bay,Prince William Sound,sample,Jack Manus,25-Jun,vial,50_2025,A6,2025_09_29
+e05228,32,24-05-32,PacificHerring,2024,5,31,Squire Point,Prince William Sound,sample,Jack Manus,25-Jun,vial,50_2025,B6,2025_09_29
+e05229,195,24-05-195,PacificHerring,2024,5,28,Mummy Bay,Prince William Sound,sample,Jack Manus,25-Jun,vial,50_2025,C6,2025_09_29
+e05230,153,24-05-153,PacificHerring,2024,5,30,Fox Farm,Prince William Sound,sample,Jack Manus,25-Jun,vial,50_2025,D6,2025_09_29
+e05231,207,24-05-207,PinkSalmon,2024,6,1,Sheep Bay,Prince William Sound,sample,Jack Manus,25-Jun,vial,50_2025,E6,2025_09_29
+e05232,383,24-06-383,PinkSalmon,2024,6,27,POW,Prince William Sound,sample,Jack Manus,25-Jun,vial,50_2025,F6,2025_09_29
+e05233,286,24-06-286,PinkSalmon,2024,6,11,Sleepy Bay,Prince William Sound,sample,Jack Manus,25-Jun,vial,50_2025,G6,2025_09_29
+e05234,335,24-06-335,PinkSalmon,2024,6,12,Chenega Bay,Prince William Sound,sample,Jack Manus,25-Jun,vial,50_2025,H6,2025_09_29
+e05235,216,24-05-216,PinkSalmon,2024,6,1,Sheep Bay,Prince William Sound,sample,Jack Manus,25-Jun,vial,50_2025,A7,2025_09_29
+e05236,33,24-05-33,PacificHerring,2024,5,31,Squire Point,Prince William Sound,sample,Jack Manus,25-Jun,vial,50_2025,B7,2025_09_29
+e05237,92,24-05-92,PacificHerring,2024,5,30,Fox Farm,Prince William Sound,sample,Jack Manus,25-Jun,vial,50_2025,C7,2025_09_29
+e05238,25A,24-05-25,PacificHerring,2024,5,31,Squire Point,Prince William Sound,sample,Jack Manus,25-Jun,vial,50_2025,D7,2025_09_29
+e05239,228,24-05-228,PinkSalmon,2024,6,1,Sheep Bay,Prince William Sound,sample,Jack Manus,25-Jun,vial,50_2025,E7,2025_09_29
+e05240,435,24-06-435,PinkSalmon,2024,6,28,Sleepy Bay,Prince William Sound,sample,Jack Manus,25-Jun,vial,50_2025,F7,2025_09_29
+e05241,400,24-06-400,PinkSalmon,2024,6,27,POW,Prince William Sound,sample,Jack Manus,25-Jun,vial,50_2025,G7,2025_09_29
+e05242,312,24-06-312,PinkSalmon,2024,6,12,POW,Prince William Sound,sample,Jack Manus,25-Jun,vial,50_2025,H7,2025_09_29
+e05243,587,24-07-585,PinkSalmon,2024,7,9,POW,Prince William Sound,sample,Jack Manus,25-Jun,vial,50_2025,A8,2025_09_29
+e05244,5,24-05-05,PacificHerring,2024,6,1,Sheep Bay,Prince William Sound,sample,Jack Manus,25-Jun,vial,50_2025,B8,2025_09_29
+e05245,157B,24-05-157,PacificHerring,2024,5,30,Fox Farm,Prince William Sound,sample,Jack Manus,25-Jun,vial,50_2025,C8,2025_09_29
+e05246,25B,24-05-25,PacificHerring,2024,5,31,Squire Point,Prince William Sound,sample,Jack Manus,25-Jun,vial,50_2025,D8,2025_09_29
+e05247,227,24-05-227,PinkSalmon,2024,6,1,Sheep Bay,Prince William Sound,sample,Jack Manus,25-Jun,vial,50_2025,E8,2025_09_29
+e05248,454,24-06-454,PinkSalmon,2024,6,28,Sleepy Bay,Prince William Sound,sample,Jack Manus,25-Jun,vial,50_2025,F8,2025_09_29
+e05249,384,24-06-384,PinkSalmon,2024,6,27,POW,Prince William Sound,sample,Jack Manus,25-Jun,vial,50_2025,G8,2025_09_29
+e05250,338,24-06-338,PinkSalmon,2024,6,12,Chenega Bay,Prince William Sound,sample,Jack Manus,25-Jun,vial,50_2025,H8,2025_09_29
+e05251,209,24-05-209,PinkSalmon,2024,6,1,Sheep Bay,Prince William Sound,sample,Jack Manus,25-Jun,vial,50_2025,A9,2025_09_29
+e05252,4,24-05-04,PacificHerring,2024,6,2,Simpson Bay,Prince William Sound,sample,Jack Manus,25-Jun,vial,50_2025,B9,2025_09_29
+e05253,177B,24-05-177,PacificHerring,2024,5,28,Mummy Bay,Prince William Sound,sample,Jack Manus,25-Jun,vial,50_2025,C9,2025_09_29
+e05254,155,24-05-155,PacificHerring,2024,5,30,Fox Farm,Prince William Sound,sample,Jack Manus,25-Jun,vial,50_2025,D9,2025_09_29
+e05255,464,24-06-464,PinkSalmon,2024,6,28,Pt. Bazil,Prince William Sound,sample,Jack Manus,25-Jun,vial,50_2025,E9,2025_09_29
+e05256,287,24-06-287,PinkSalmon,2024,6,11,Sleepy Bay,Prince William Sound,sample,Jack Manus,25-Jun,vial,50_2025,F9,2025_09_29
+e05257,292,24-06-292,PinkSalmon,2024,6,11,Sleepy Bay,Prince William Sound,sample,Jack Manus,25-Jun,vial,50_2025,G9,2025_09_29
+e05258,346,24-06-346,PinkSalmon,2024,6,12,Chenega Bay,Prince William Sound,sample,Jack Manus,25-Jun,vial,50_2025,H9,2025_09_29
+e05259,626,24-07-626,PinkSalmon,2024,7,9,Chenega Bay,Prince William Sound,sample,Jack Manus,25-Jun,vial,50_2025,A10,2025_09_29
+e05260,13,24-05-13,PacificHerring,2024,5,31,Squire Point,Prince William Sound,sample,Jack Manus,25-Jun,vial,50_2025,B10,2025_09_29
+e05261,177A,24-05-177,PacificHerring,2024,5,28,Mummy Bay,Prince William Sound,sample,Jack Manus,25-Jun,vial,50_2025,C10,2025_09_29
+e05262,62,24-05-62,PacificHerring,2024,5,31,Squire Point,Prince William Sound,sample,Jack Manus,25-Jun,vial,50_2025,D10,2025_09_29
+e05263,482,24-06-482,PinkSalmon,2024,6,28,Pt. Bazil,Prince William Sound,sample,Jack Manus,25-Jun,vial,50_2025,E10,2025_09_29
+e05264,453,24-06-453,PinkSalmon,2024,6,28,Sleepy Bay,Prince William Sound,sample,Jack Manus,25-Jun,vial,50_2025,F10,2025_09_29
+e05265,325,24-06-325,PinkSalmon,2024,6,12,POW,Prince William Sound,sample,Jack Manus,25-Jun,vial,50_2025,G10,2025_09_29
+e05266,317,24-06-317,PinkSalmon,2024,6,12,POW,Prince William Sound,sample,Jack Manus,25-Jun,vial,50_2025,H10,2025_09_29
+e05267,205,24-05-205,PinkSalmon,2024,6,1,Sheep Bay,Prince William Sound,sample,Jack Manus,25-Jun,vial,50_2025,A11,2025_09_29
+e05268,70,24-05-70,PacificHerring,2024,5,31,Hogg Bay,Prince William Sound,sample,Jack Manus,25-Jun,vial,50_2025,B11,2025_09_29
+e05269,144,24-05-144,PacificHerring,2024,5,30,Fox Farm,Prince William Sound,sample,Jack Manus,25-Jun,vial,50_2025,C11,2025_09_29
+e05270,183,24-05-183,PacificHerring,2024,5,28,Mummy Bay,Prince William Sound,sample,Jack Manus,25-Jun,vial,50_2025,D11,2025_09_29
+e05271,381,24-06-381,PinkSalmon,2024,6,27,POW,Prince William Sound,sample,Jack Manus,25-Jun,vial,50_2025,E11,2025_09_29
+e05272,452,24-06-452,PinkSalmon,2024,6,28,Sleepy Bay,Prince William Sound,sample,Jack Manus,25-Jun,vial,50_2025,F11,2025_09_29
+e05273,284,24-06-284,PinkSalmon,2024,6,11,Sleepy Bay,Prince William Sound,sample,Jack Manus,25-Jun,vial,50_2025,G11,2025_09_29
+e05274,337,24-06-337,PinkSalmon,2024,6,12,Chenega Bay,Prince William Sound,sample,Jack Manus,25-Jun,vial,50_2025,H11,2025_09_29
+e05275,663,24-07-663,PinkSalmon,2024,7,9,Chenega Bay,Prince William Sound,sample,Jack Manus,25-Jun,vial,50_2025,A12,2025_09_29
+e05276,3,24-05-03,PacificHerring,2024,6,2,Simpson Bay,Prince William Sound,sample,Jack Manus,25-Jun,vial,50_2025,B12,2025_09_29
+e05277,314,24-06-314,PinkSalmon,2024,6,12,POW,Prince William Sound,sample,Jack Manus,25-Jun,vial,50_2025,C12,2025_09_29
+e05278,12,24-05-12,PacificHerring,2024,6,1,Sheep Bay,Prince William Sound,sample,Jack Manus,25-Jun,vial,50_2025,D12,2025_09_29
+e05279,467,24-06-467,PinkSalmon,2024,6,28,Pt. Bazil,Prince William Sound,sample,Jack Manus,25-Jun,vial,50_2025,E12,2025_09_29
+e05280,434,24-06-434,PinkSalmon,2024,6,28,Sleepy Bay,Prince William Sound,sample,Jack Manus,25-Jun,vial,50_2025,F12,2025_09_29
+e05281,Control,,NA,2024,NA,NA,NA,Prince William Sound,extraction_blank,Jack Manus,25-Jun,vial,50_2025,G12,2025_09_29
+e05282,Control,,NA,2024,NA,NA,NA,Prince William Sound,extraction_blank,Jack Manus,25-Jun,vial,50_2025,H12,2025_09_29
+e05283,258,NA,unknown,2024,,,,Prince William Sound,sample,Jack Manus,25-Jun,vial,51_2025,A1,2025_09_29
+e05284,249,NA,unknown,2024,,,,Prince William Sound,sample,Jack Manus,25-Jun,vial,51_2025,B1,2025_09_29
+e05285,565,24-07-565,PinkSalmon,2024,7,9,POW,Prince William Sound,sample,Jack Manus,25-Jun,vial,51_2025,C1,2025_09_29
+e05286,293,24-06-293,PinkSalmon,2024,6,11,Sleepy Bay,Prince William Sound,sample,Jack Manus,25-Jun,vial,51_2025,D1,2025_09_29
+e05287,217,24-05-217,PinkSalmon,2024,6,1,Sheep Bay,Prince William Sound,sample,Jack Manus,25-Jun,vial,51_2025,A2,2025_09_29
+e05288,135,24-05-135,PacificHerring,2024,5,30,Fox Farm,Prince William Sound,sample,Jack Manus,25-Jun,vial,51_2025,B2,2025_09_29
+e05289,579,24-07-579,PinkSalmon,2024,7,9,POW,Prince William Sound,sample,Jack Manus,25-Jun,vial,51_2025,C2,2025_09_29
+e05290,143,24-05-143,PacificHerring,2024,5,30,Fox Farm,Prince William Sound,sample,Jack Manus,25-Jun,vial,51_2025,D2,2025_09_29
+e05291,206,24-05-206,PinkSalmon,2024,6,1,Sheep Bay,Prince William Sound,sample,Jack Manus,25-Jun,vial,51_2025,A3,2025_09_29
+e05292,238,24-05-238,PinkSalmon,2024,6,1,Sheep Bay,Prince William Sound,sample,Jack Manus,25-Jun,vial,51_2025,B3,2025_09_29
+e05293,588,24-07-587,unknown,2024,,,,Prince William Sound,sample,Jack Manus,25-Jun,vial,51_2025,C3,2025_09_29
+e05294,218,24-05-218,PinkSalmon,2024,6,1,Sheep Bay,Prince William Sound,sample,Jack Manus,25-Jun,vial,51_2025,A4,2025_09_29
+e05295,82,24-05-82,PacificHerring,2024,5,31,Hogg Bay,Prince William Sound,sample,Jack Manus,25-Jun,vial,51_2025,B4,2025_09_29
+e05296,73,24-05-73,PacificHerring,2024,5,31,Hogg Bay,Prince William Sound,sample,Jack Manus,25-Jun,vial,51_2025,C4,2025_09_29
+e05297,229,24-05-229,PinkSalmon,2024,6,1,Sheep Bay,Prince William Sound,sample,Jack Manus,25-Jun,vial,51_2025,A5,2025_09_29
+e05298,581,24-07-581,PinkSalmon,2024,7,9,POW,Prince William Sound,sample,Jack Manus,25-Jun,vial,51_2025,B5,2025_09_29
+e05299,506,24-07-506,PinkSalmon,2024,7,8,Sleepy Bay,Prince William Sound,sample,Jack Manus,25-Jun,vial,51_2025,C5,2025_09_29
+e05300,257,NA,unknown,2024,,,,Prince William Sound,sample,Jack Manus,25-Jun,vial,51_2025,A6,2025_09_29
+e05301,519,24-07-519,PinkSalmon,2024,7,8,Sleepy Bay,Prince William Sound,sample,Jack Manus,25-Jun,vial,51_2025,B6,2025_09_29
+e05302,90,24-05-90,PacificHerring,2024,5,31,Hogg Bay,Prince William Sound,sample,Jack Manus,25-Jun,vial,51_2025,C6,2025_09_29
+e05303,235,24-05-235,PinkSalmon,2024,6,1,Sheep Bay,Prince William Sound,sample,Jack Manus,25-Jun,vial,51_2025,A7,2025_09_29
+e05304,515,24-07-515,PinkSalmon,2024,7,8,Sleepy Bay,Prince William Sound,sample,Jack Manus,25-Jun,vial,51_2025,B7,2025_09_29
+e05305,347,24-06-347,PinkSalmon,2024,6,12,Chenega Bay,Prince William Sound,sample,Jack Manus,25-Jun,vial,51_2025,C7,2025_09_29
+e05306,237,24-05-237,PinkSalmon,2024,6,1,Sheep Bay,Prince William Sound,sample,Jack Manus,25-Jun,vial,51_2025,A8,2025_09_29
+e05307,522,24-07-522,PinkSalmon,2024,7,8,Sleepy Bay,Prince William Sound,sample,Jack Manus,25-Jun,vial,51_2025,B8,2025_09_29
+e05308,564,24-07-564,PinkSalmon,2024,7,9,POW,Prince William Sound,sample,Jack Manus,25-Jun,vial,51_2025,C8,2025_09_29
+e05309,84,24-05-84,PacificHerring,2024,5,31,Hogg Bay,Prince William Sound,sample,Jack Manus,25-Jun,vial,51_2025,A9,2025_09_29
+e05310,560,24-07-560,PinkSalmon,2024,7,9,POW,Prince William Sound,sample,Jack Manus,25-Jun,vial,51_2025,B9,2025_09_29
+e05311,568,24-07-568,PinkSalmon,2024,7,9,POW,Prince William Sound,sample,Jack Manus,25-Jun,vial,51_2025,C9,2025_09_29
+e05312,245,24-05-245,PinkSalmon,2024,6,1,Sheep Bay,Prince William Sound,sample,Jack Manus,25-Jun,vial,51_2025,A10,2025_09_29
+e05313,494,24-07-494,PinkSalmon,2024,7,8,Pt.Bazil,Prince William Sound,sample,Jack Manus,25-Jun,vial,51_2025,B10,2025_09_29
+e05314,514,24-07-514,PinkSalmon,2024,7,8,Sleepy Bay,Prince William Sound,sample,Jack Manus,25-Jun,vial,51_2025,C10,2025_09_29
+e05315,248,NA,unknown,2024,,,,Prince William Sound,sample,Jack Manus,25-Jun,vial,51_2025,A11,2025_09_29
+e05316,580,24-07-580,PinkSalmon,2024,7,9,POW,Prince William Sound,sample,Jack Manus,25-Jun,vial,51_2025,B11,2025_09_29
+e05317,523,24-07-523,PinkSalmon,2024,7,8,Sleepy Bay,Prince William Sound,sample,Jack Manus,25-Jun,vial,51_2025,C11,2025_09_29
+e05318,80,24-05-80,PacificHerring,2024,5,31,Hogg Bay,Prince William Sound,sample,Jack Manus,25-Jun,vial,51_2025,A12,2025_09_29
+e05319,572,24-07-572,PinkSalmon,2024,7,9,POW,Prince William Sound,sample,Jack Manus,25-Jun,vial,51_2025,B12,2025_09_29
+e05320,136,24-05-136,PacificHerring,2024,5,30,Fox Farm,Prince William Sound,sample,Jack Manus,25-Jun,vial,51_2025,C12,2025_09_29
+PnkHerNC,NA,NA,NA,NA,NA,NA,NA,Prince William Sound,pcr_blank,NA,NA,NA,51_2025,E12,2025_09_29
+PnkHerPC,NA,NA,NA,NA,NA,NA,NA,Prince William Sound,positive,NA,NA,NA,51_2025,D12,2025_09_29

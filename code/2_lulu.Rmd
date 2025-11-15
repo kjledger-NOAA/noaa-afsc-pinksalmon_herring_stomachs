@@ -1,0 +1,79 @@
+---
+title: "use Lulu to reduce number of erroneous ASVs"
+output: html_document
+date: "2025-11-14"
+---
+
+install lulu package using devtools
+```{r}
+#library(devtools)
+#install_github("tobiasgf/lulu")  
+```
+
+load packages
+```{r}
+library(tidyverse)
+library(lulu)
+```
+
+```{r}
+## Make Lulu matchlist =========================================================
+# Lulu needs a matchlist, which is basically all the ASVs blasted against
+# itself.
+
+# First create a directory to hold the blast database
+dir.create("/Users/kimberly.ledger/Documents/noaa-afsc-pinksalmon_herring_stomachs/ref/repseq_db")
+
+# Next, make a blast-formatted reference database from your ASVs. Here we are
+# using our representative sequences fasta that we exported earlier.
+
+## Run in terminal 
+## may need to activate conda environment first: conda activate cutadptenv
+## (base) akcjm146-kl22:noaa-afsc-pinksalmon_herring_stomachs kimberly.ledger$ makeblastdb -in fastq/trimmed/filtered/outputs/myasvs.fasta -dbtype nucl -out ref/repseq_db/repseq_db
+
+list.files("ref/repseq_db/")
+
+## Back in the terminal
+## Then blast the OTUs against the database
+## (base) akcjm146-kl22:noaa-afsc-pinksalmon_herring_stomachs kimberly.ledger$ blastn -db ref/repseq_db/repseq_db -outfmt '6 qseqid sseqid pident' -out ref/match_list.txt -qcov_hsp_perc 80 -perc_identity 84 -query fastq/trimmed/filtered/outputs/myasvs.fasta
+```
+
+read in the asv table and match list 
+```{r}
+asv_table <- read.csv("~/Documents/noaa-afsc-pinksalmon_herring_stomachs/fastq/trimmed/filtered/outputs/ASVtable.csv") 
+rownames(asv_table) <- asv_table$X
+asv_table <- asv_table %>% select(!X) %>% mutate(across(everything(), as.numeric)) %>% as.matrix() %>% t() 
+
+asv_df <- as.data.frame(asv_table)
+rownames(asv_df) <- rownames(asv_table)
+
+matchlist <- read.table("~/Documents/noaa-afsc-pinksalmon_herring_stomachs/ref/match_list.txt", header=FALSE,as.is=TRUE, stringsAsFactors=FALSE)
+```
+
+Run Lulu
+```{r}
+curated_result_98 <- lulu(asv_df, matchlist, minimum_ratio_type = "min", minimum_ratio = 1, minimum_match = 98, minimum_relative_cooccurence = 0.95)
+```
+
+Peek at output
+```{r}
+# look at the curated table
+curated_result_98$curated_table
+
+# look at the original table
+curated_result_98$original_table
+
+# number of asvs retained 
+curated_result_98$curated_count
+
+# number of asvs discarded 
+curated_result_98$discarded_count
+
+# all orginal asvs with their parent or merged assignment 
+curated_result_98$otu_map
+```
+
+```{r}
+write.csv(curated_result_98$curated_table, "~/Documents/noaa-afsc-pinksalmon_herring_stomachs/ref/asvtable_lulu98.csv")
+write.csv(curated_result_98$otu_map, "~/Documents/noaa-afsc-pinksalmon_herring_stomachs/ref/asvmap_lulu98.csv")
+```

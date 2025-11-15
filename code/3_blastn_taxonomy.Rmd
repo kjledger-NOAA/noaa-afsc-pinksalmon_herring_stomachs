@@ -1,0 +1,345 @@
+---
+title: "blastn taxonomic analysis"
+author: "Kimberly Ledger"
+date: "2025-11-14"
+output: html_document
+---
+
+taxonomic id of blastn output. this code is useful for assigning higher classifications (genus, family, etc) for ASVs that have multispecies hits.   
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r load-libraries}
+library(dplyr)
+library(tidyr)
+library(stringr)
+library(tidyverse)
+```
+
+## load output from blastn 
+```{r load-output-from-taxonkit}
+taxonomy <-read.delim("../fastq/trimmed/filtered/outputs/blastnresults", header = FALSE, na.strings=c(""," ","NA"))
+head(taxonomy)
+colnames(taxonomy) <- c("ASV", "subject", "pident", "length", "mismatch", "gapopen",
+  "qstart", "qend", "sstart", "send", "evalue", "bitscore", "qseq", "sseq")
+```
+
+## filter the data frame to just work with the curated ASVs (post-LULU)
+```{r}
+asv_table <- read.csv("~/Documents/noaa-afsc-pinksalmon_herring_stomachs/ref/asvtable_lulu98.csv")
+
+taxonomy <- taxonomy %>%
+  filter(ASV %in% asv_table$X)
+```
+
+
+## clean up the header and seperate subject 
+```{r}
+# use the full taxonomy rather than the seq id to collapse identical entries
+tax_df <- taxonomy %>%
+  filter(length > 100) %>% # make sure all retained matches are >100 bp
+  select(ASV, subject, pident, length) %>%
+  separate(subject, into = c("subject_id", "taxonomy"), sep = "###") %>%
+  # Split taxonomy string into ranks
+  separate(taxonomy, into = c("root","kingdom","phylum","class","order","family","genus","species"),
+           sep = ";", fill = "right") %>%
+  select(!root) %>% 
+  # Separate name and taxID for each rank
+  mutate(across(c(kingdom, phylum, class, order, family, genus),
+                ~ str_split_fixed(., "_", 2))) %>% 
+  mutate(species = str_match(species, "^(.*_.*)_(\\d+)$")[,2:3]) %>% 
+  mutate(kingdom = kingdom[,1],
+    phylum  = phylum[,1],
+    class   = class[,1],
+    order   = order[,1],
+    family  = family[,1],
+    genus   = genus[,1],
+    species = species[,1]) %>%
+  select(ASV, pident, length, kingdom, phylum, class, order, family, genus, species) %>%
+  unique() %>%
+  filter(!str_detect(species, "_x_")) %>% ##remove hybrids
+  mutate(species_name = str_replace_all(species, "_", " "))   
+```
+
+## now look at the fish and figure out what fish taxa are in/out of our range
+```{r}
+to_check_range <- tax_df %>%
+  filter(class == "Actinopteri") %>%
+  ungroup() %>%
+  select(species, genus, family, order, class, phylum) %>%
+  unique() %>% 
+  mutate(species_name = str_replace_all(species, "_", " "))
+```
+
+## check ranges for species using rfishbase 
+```{r}
+#library(remotes)
+#remotes::install_github("ropensci/rfishbase")
+library(rfishbase)
+
+#one-time download of all fishbase tables... this takes a bit 
+#fb_import()
+
+#first, validate species names using rfishbase synonyms
+spp_df <- synonyms(to_check_range$species_name)
+
+#check the synonyms
+syn <- spp_df %>% 
+  filter(Status == "synonym")
+
+#rename any synonyms with the validated name  
+to_check_range_validated <- to_check_range %>%
+  rename(synonym = species_name) %>%
+  left_join(syn, by = "synonym") %>%
+  mutate(synonym = ifelse(is.na(Species), synonym, Species)) %>%
+  select(genus:synonym) %>%
+  rename(species = synonym) %>%
+  unique()
+
+#get distribution info 
+spp_distribution <- ecosystem(to_check_range_validated$species) %>%
+  select(Species, EcosystemName) %>%
+  unique()
+
+#add column to designate if we will consider a species as "in range"- for this study, this will be NE Pacific 
+spp_distribution_range <- spp_distribution %>%
+  mutate(in_range = ifelse(is.na(EcosystemName), NA, "no"),
+         #in_range = ifelse(EcosystemName == "Pacific Ocean", "yes", in_range),
+         in_range = ifelse(EcosystemName == "Gulf of Alaska", "yes", in_range))
+
+#keep just a list of spp names and yes/no/NA for "in range"  - this way we can keep track of what spp didn't have any reference information in fishbase to determine range 
+in_range_df <- spp_distribution_range %>%
+  filter(in_range == "yes")
+```
+
+check to make sure the range filter worked okay
+```{r}
+removed <- anti_join(to_check_range_validated, in_range_df, by = c("species" = "Species"))
+```
+
+for now, i'm being more restrictive and using the GofA filter. might consider including all Pacific Ocean species? 
+
+
+Polypera greeni - Liparis greeni 
+ASV 68 - Sus scrofa 
+remove the non-fish... 
+
+
+## what non-fish are here? 
+```{r}
+not_Actinopteri <- tax_df %>%
+  filter(class != "Actinopteri") 
+
+unique(not_Actinopteri$species)
+```
+
+## keep only the "in range" fish species in the taxon dataframe - and all non-fish - and the positive control species (Acipenser fulvescens)
+```{r}
+in_range_spp <- unique(in_range_df$Species)
+
+taxa_keepers <- c(in_range_spp, unique(not_Actinopteri$species), "Acipenser fulvescens", "Ammodytes personatus")
+
+taxon_df <- tax_df %>%
+  filter(species_name %in% taxa_keepers)
+```
+
+
+## figure out what ASVs are unambiguously a single species
+```{r}
+single_spp_seqs <- taxon_df %>% 
+  group_by(ASV) %>%
+  add_tally(name = "n_taxa") %>%
+  filter(n_taxa == 1)
+
+#modify headers to match with filtering to follow 
+single_spp_seqs <- single_spp_seqs %>%
+  rename(seq_percID = pident) %>%
+  mutate(id_rank = 1,
+         top_perc = seq_percID,
+         diff = 0) %>%
+  select(!length) %>%
+  select(!species_name) %>%
+  select(!n_taxa)
+```
+
+## remove the single-species seqs from the dataframe and then rank the hits by % identity for the remaining seqs
+```{r}
+seq_id_diff <- taxon_df %>%
+  anti_join(., single_spp_seqs) %>%  ## comment out this line if there are no single species ASVs
+  select(-length) %>%
+  group_by(ASV, species, genus, family, order, class, phylum, kingdom) %>%
+    mutate(seq_percID = max(pident)) %>%
+    group_by(ASV, species, genus, family, order, class, phylum, kingdom, seq_percID) %>%
+  summarise(max(seq_percID)) %>% # take just the top hit for each taxon (for each sequence)
+  select(-`max(seq_percID)`) %>%
+  ungroup() %>%
+  group_by(ASV) %>%
+      mutate(id_rank = rank(desc(seq_percID), ties.method = "min")) %>% # rank the taxonomic hits per sequence by % id
+       mutate(top_perc = max(seq_percID)) %>% # designate the highest % id for the best taxonomic hit in each sequence (in some, but not all cases, this is 100%)   
+      mutate(diff = top_perc - seq_percID) %>% # calculate the difference between the % identity of the top hit and each subsequent taxonomic hit
+        arrange(diff)
+
+seq_id_diff %>%
+  filter(diff > 0)
+```
+
+Now you have the single best entry for each species for each sequence ranked and with the difference between the first and second ranked entries calculated.
+
+For sequences with multiple top hits, where the difference between ranked taxa < 0.5, you will end up defaulting to genus- or family-level ID. 
+
+## Figure out which differences are > 0.5% and eliminate those first
+```{r}
+# filter out any taxa that are >2% less matching identity than the top taxonomic hit for a given sequence
+to_remove_low_perc_hits <- seq_id_diff %>%
+  ungroup() %>%
+  group_by(ASV) %>%
+  filter(diff > 0.5)
+
+keepers <- seq_id_diff %>%
+  anti_join(to_remove_low_perc_hits)
+```
+
+## so now determine whether ASVs should be assigned to genus, family, order, etc. 
+```{r}
+singletons <- keepers %>%
+  select(ASV) %>%
+  tally() %>%
+  filter(n == 1)
+
+# these are the seqs that now have only a single match
+singleton_df <- singletons %>%
+  left_join(keepers) %>%
+  select(-n) %>%
+  bind_rows(single_spp_seqs) %>% # combine the single spp data
+  mutate(taxonomic_level = "species") %>%
+  mutate(taxon = species)
+
+## Genus-level matches
+# remove the singletons from the bigger df 
+single_genus <- keepers %>%
+  anti_join(singleton_df)%>% # at best, these should be genus-level matches
+  group_by(ASV, genus) %>%
+  tally() %>%
+  ungroup() %>%
+  group_by(ASV) %>%
+  tally() %>%
+  filter(n == 1) %>% # seqs that match a single genus
+  select(-n) %>%
+  left_join(., keepers) %>%
+  mutate(taxonomic_level = "genus") %>%
+  mutate(taxon = genus)
+  
+
+## Family-level matches
+single_family <- keepers %>%
+  anti_join(singleton_df)%>%
+  anti_join(single_genus) %>%
+  group_by(ASV, family) %>%
+  tally() %>%
+  ungroup() %>%
+  group_by(ASV) %>%
+  tally() %>%
+  filter(n == 1) %>% # seqs that match a single family
+  select(-n) %>%
+  left_join(., keepers) %>%
+  mutate(taxonomic_level = "family") %>%
+  mutate(taxon = family)
+
+
+## Order-level matches
+single_order <- keepers %>%
+  anti_join(singleton_df)%>%
+  anti_join(single_genus) %>%
+  anti_join(single_family) %>%
+  group_by(ASV, order) %>%
+  tally() %>%
+  ungroup() %>%
+  group_by(ASV) %>%
+  tally() %>%
+  filter(n == 1) %>% # seqs that match a single order
+  select(-n) %>%
+  left_join(., keepers) %>%
+  mutate(taxonomic_level = "order") %>%
+  mutate(taxon = order)
+
+
+## Class-level matches
+single_class <- keepers %>%
+  anti_join(singleton_df)%>%
+  anti_join(single_genus) %>%
+  anti_join(single_family) %>%
+  anti_join(single_order) %>%
+  group_by(ASV, class) %>%
+  tally() %>%
+  ungroup() %>%
+  group_by(ASV) %>%
+  tally() %>% 
+  filter(n == 1) %>% # seqs that match a single class
+  select(-n) %>%
+  left_join(., keepers) %>%
+  mutate(taxonomic_level = "class") %>%
+  mutate(taxon = class)
+
+
+## Phylum-level matches
+single_phylum <- keepers %>%
+  anti_join(singleton_df)%>%
+  anti_join(single_genus) %>%
+  anti_join(single_family) %>%
+  anti_join(single_order) %>%
+  anti_join(single_class) %>%
+  group_by(ASV, phylum) %>%
+  tally() %>%
+  ungroup() %>%
+  group_by(ASV) %>%
+  tally() %>% 
+  filter(n == 1) %>% # seqs that match a single phylum
+  select(-n) %>%
+  left_join(., keepers) %>%
+  mutate(taxonomic_level = "phylum") %>%
+  mutate(taxon = phylum)
+
+# Kingdom level matches
+single_kingdom <- keepers %>%
+  anti_join(singleton_df)%>%
+  anti_join(single_genus) %>%
+  anti_join(single_family) %>%
+  anti_join(single_order) %>%
+  anti_join(single_class) %>%
+  group_by(ASV, kingdom) %>%
+  tally() %>%
+  ungroup() %>%
+  group_by(ASV) %>%
+  tally() %>% 
+  filter(n == 1) %>% # seqs that match a single kingdom
+  select(-n) %>%
+  left_join(., keepers) %>%
+  mutate(taxonomic_level = "kingdom") %>%
+  mutate(taxon = kingdom)
+```
+
+
+## recombine the full data set now that the appropriate level of taxonomy has been determined
+```{r}
+sorted_tax_df <- bind_rows(single_kingdom, single_phylum, single_class, single_order, single_family, single_genus, singleton_df)
+```
+
+## Create output taxonomy data frames
+```{r}
+uncollapsed_taxonomy <- sorted_tax_df %>%
+  select(-top_perc, -id_rank) %>%
+  unique() %>%
+  arrange(ASV)
+
+# and then collapse that down to just a single taxon per ASV
+collapsed_taxonomy <- uncollapsed_taxonomy %>%
+  select(ASV, taxon, taxonomic_level) %>%
+  unique()
+```
+
+```{r}
+write.csv(uncollapsed_taxonomy, "../outputs/uncollaspsed_taxonomy.csv")
+write.csv(collapsed_taxonomy, "../outputs/collaspsed_taxonomy.csv")
+```
