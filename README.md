@@ -37,4 +37,6 @@ blastn -query outputs/1_sequence_filtering/myasvs.fasta \
        
 6. filter blastn results to finalize taxonomic assignments using "3_blastn_taxonomy.Rmd"
 
-7. 
+7. perform secondary quality control using "4_decontamination.Rmd"
+
+8. summarize stomach content using "5_stomachs.Rmd"
