@@ -11,11 +11,12 @@ library(tidyverse)
 library(stringr)
 library(reshape2)
 rename <- dplyr::rename
+library(here)
 ```
 
 load the lulu curated asv table 
 ```{r}
-asv_table <- read.csv("../ref/asvtable_lulu98.csv") 
+asv_table <- read.csv(here("outputs/2_lulu", "asvtable_lulu98.csv")) 
 #562 ASVs across 280 samples
 
 #transpose 
@@ -45,7 +46,7 @@ asv_table$sample_ID <- gsub("\\.", "-", asv_table$sample_ID)
 
 load taxonomic assignments 
 ```{r}
-taxonomy <- read.csv("../outputs/collaspsed_taxonomy.csv") %>% select(!X)
+taxonomy <- read.csv(here("outputs/3_blastn_taxonomy", "collaspsed_taxonomy.csv"))
 ```
 
 ## decon 1 - remove ASVs that do not have a taxonomic assignment 
@@ -62,14 +63,17 @@ removed_asvs <- anti_join(asv_table_long, asv_table_filter1) %>%
   summarize(total_reads = sum(reads)) %>%
   arrange(desc(total_reads))
 removed_asvs
-```
 
-ASV77 - no blastn matches 
-less than 1000 reads each for all other removed ASVs 
+#how many ASVs and total reads removed because of no tax assignment? 
+nrow(removed_asvs)
+sum(removed_asvs$total_reads)
+#proportion of reads removed because of no taxonomic assignment
+sum(removed_asvs$total_reads)/sum(asv_table_long$reads)
+```
 
 add column to sample tracking table to include number of reads per sample after taxonomic assignment 
 ```{r}
-track <- read.csv("../fastq/trimmed/filtered/outputs/track.csv") %>%
+track <- read.csv(here("outputs/1_sequence_filtering", "track.csv")) %>%
   rename(sample_ID = X)
 
 reads_per_sample <- asv_table_filter1 %>%
@@ -85,24 +89,24 @@ at first glance this is all looking reasonable
 load sample metadata 
 ```{r}
 metadata <- read.csv("../pinksalmon_and_herring_metadata.csv") %>%
-  rename(sample_ID = extraction_ID)
+  rename(sample_ID = extraction_ID) %>%
+  rename(stomach = Species)
 
 ## _ were changed to - by illumina output
 metadata$sample_ID <- gsub("_", "-", metadata$sample_ID) 
 ```
 
-
 add column to the ASV table that labels the sample type and taxonomic assignment
 ```{r}
 asv_table_with_sample_type <- metadata %>%
-  dplyr::select(sample_ID, FishID, Species, sequence_date, sample_type) %>%
+  dplyr::select(sample_ID, FishID, stomach, sequence_date, sample_type) %>%
   left_join(asv_table_filter1, by = "sample_ID") %>%
   left_join(taxonomy, by = "ASV")
 ```
 
 ## Step 1. Account for tag-jumping by using the positive controls  
 
-first, get a feel for the data by visualizing 
+first, get a feel for the data by visualizing positive controls 
 ```{r}
 asv_table_with_sample_type %>%
   filter(sample_type == "positive") %>%
@@ -146,8 +150,7 @@ asv_table_with_sample_type %>%
 subtract the proportion of reads that jumped into the positive control samples from each environmental sample 
 
 identify the maximum proportion of reads for each ASV found in the positive controls by sequencing run 
-excluding the high prop of pink salmon in PC27
-
+** excluding the high prop of pink salmon in PC27
 ```{r}
 prop_asvs_in_positives <- asv_table_with_sample_type %>%
   filter(sample_type == "positive") %>%
@@ -187,9 +190,9 @@ asv_table_filter2 <- indexhop_table %>%
 ```
 
 
-## Step 2. Account for contaminants in controls 
+## Step 2. Account for contaminants in negative controls 
 
-negatives 
+plot negatives 
 ```{r}
 asv_table_filter2 %>%
   filter(reads > 0) %>%
@@ -202,7 +205,7 @@ asv_table_filter2 %>%
   labs(
     y = "number of sequencing reads",
     x = "sample ID",
-    title = "ASV reads in controls") + 
+    title = "ASV reads in negative controls") + 
   theme(
     #axis.text.x = element_text(angle = 90, hjust = 0.95),
     axis.text.x = element_blank(),
@@ -224,7 +227,7 @@ asv_table_filter2 %>%
   labs(
     y = "number of sequencing reads",
     x = "sample ID",
-    title = "taxa reads in controls") + 
+    title = "taxa reads in negative controls") + 
   theme(
     #axis.text.x = element_text(angle = 90, hjust = 0.95),
     axis.text.x = element_blank(),
@@ -236,7 +239,24 @@ asv_table_filter2 %>%
   )
 ```
 
-based on the negatives, small read counts in samples should be interpreted with caution... 
+summarize read depth by sample type
+```{r}
+asv_table_filter2 %>%
+  group_by(sample_ID, sample_type) %>%
+  summarize(tot_reads = sum(reads)) %>%
+  group_by(sample_type) %>%
+  summarize(
+    min   = min(tot_reads, na.rm = TRUE),
+    q25   = quantile(tot_reads, 0.25, na.rm = TRUE),
+    median = median(tot_reads, na.rm = TRUE),
+    mean   = mean(tot_reads, na.rm = TRUE),
+    q75   = quantile(tot_reads, 0.75, na.rm = TRUE),
+    max   = max(tot_reads, na.rm = TRUE)
+  )
+```
+
+
+perhaps come back to this to include a filter? 
 
 ## Step 4. Remove low read depth samples based on ASV accumulation curve
 
@@ -289,7 +309,7 @@ asv_table_filter3 <- asv_table_filter2 %>%
 
 
 ```{r}
-saveRDS(asv_table_filter3, file = "../outputs/decontaminated_asv_table.RDS")
+saveRDS(asv_table_filter3, file =  here("outputs/4_decontamination", "decontaminated_asv_table.RDS"))
 ```
 
 

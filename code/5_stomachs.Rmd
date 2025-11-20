@@ -11,253 +11,571 @@ library(tidyverse)
 
 load decontaminated ASV table w/ taxon assignments 
 ```{r}
-taxon_table <- readRDS("../outputs/decontaminated_asv_table.RDS") %>%
+taxon_table <- readRDS(here("outputs/4_decontamination", "decontaminated_asv_table.RDS")) %>%
   filter(sample_type == "sample") %>%
-  mutate(year = ifelse(sequence_date == "2023_11_15", "y_2023", "y_2024")) %>%
-  group_by(sample_ID, FishID, Species, year, taxon) %>%
+  mutate(year = ifelse(sequence_date == "2023_11_15", 2023, 2024)) %>%
+  filter(class != "Mammalia") %>% ## remove contamination from mammals 
+  group_by(sample_ID, FishID, stomach, year, taxon) %>%
   summarize(reads = sum(reads)) %>%
   filter(taxon != "Acipenser_fulvescens") ## remove positive control 
+```
+
+compare sequencing depth by year
+```{r}
+taxon_table %>%
+  group_by(year, sample_ID) %>%
+  summarize(tot_reads = sum(reads)) %>%
+  ungroup()%>%
+  group_by(year) %>%
+  summarize(
+    min   = min(tot_reads, na.rm = TRUE),
+    q25   = quantile(tot_reads, 0.25, na.rm = TRUE),
+    median = median(tot_reads, na.rm = TRUE),
+    mean   = mean(tot_reads, na.rm = TRUE),
+    q75   = quantile(tot_reads, 0.75, na.rm = TRUE),
+    max   = max(tot_reads, na.rm = TRUE))
 ```
 
 
 ## Pacific herring stomach contents 
 ```{r}
 herring <- taxon_table %>%
-  filter(Species == "PacificHerring") 
+  filter(stomach == "PacificHerring") %>% 
+  filter(reads > 0)
 
-herring_taxa <- herring %>%
-  group_by(year, taxon) %>%
-  summarise(total = sum(reads)) %>%
-  pivot_wider(names_from = "year", values_from = "total")
+total_samples_per_year <- herring %>%
+  group_by(year) %>%
+  summarise(n_total = n_distinct(sample_ID), .groups = "drop")
 
-1639262/sum(herring_taxa$y_2023, na.rm = T) #prop of herring reads in 2023 data
-541001/sum(herring_taxa$y_2024, na.rm = T) #prop of herring reads in 2024 data
+herring_detections <- herring %>%
+  group_by(year, taxon) %>%       # group by species
+  summarise(n_samples = n(), .groups = "drop") %>%
+  left_join(total_samples_per_year, by = "year") %>%
+  mutate(prop_samples = n_samples/n_total)
 ```
 
-identify the 10 most common taxa in herring stomachs 
+look closer at the proportion of herring reads from herring stomachs
 ```{r}
-herring_mostcommon_2023 <- herring %>%
-  filter(year == "y_2023") %>%
-  group_by(taxon) %>%
-  summarise(total = sum(reads)) %>%
-  arrange(desc(total)) %>%
-  filter(total > 10000)
-
-herring_mostcommon_2024 <- herring %>%
-  filter(year == "y_2024") %>%
-  group_by(taxon) %>%
-  summarise(total = sum(reads)) %>%
-  arrange(desc(total)) %>%
-  filter(total > 6000)
-
-herring_mostcommon <- herring_mostcommon_2023 %>%
-  bind_rows(herring_mostcommon_2024) %>% select(taxon) %>% unique()
-
-herring <- herring %>%
-  mutate(taxon_common = ifelse(taxon %in% herring_mostcommon$taxon, taxon, "rare"))
-```
-
-
-plot samples WITH herring reads
-```{r}
-herring %>%
-  filter(reads > 0) %>%
-  ggplot(aes(x=sample_ID, y=reads, fill=taxon_common)) +
-  geom_bar(stat = "identity") + 
-    theme_bw() + 
-   labs(
-    y = "sequencing reads",
-    x = "sample ID",
-    title = "herring stomachs with herring reads")  +
-  theme(
-    axis.text.x = element_text(angle = 90, hjust = 0.95),
-    legend.position = "bottom",
-    legend.title = element_blank(),
-    legend.text = element_text(size = 8)
-  )  
-```
-
-```{r}
-herring %>%
-  filter(reads > 0) %>%
-  filter(taxon_common != "Clupea_pallasii") %>%
-  ggplot(aes(x=sample_ID, y=reads, fill=taxon_common)) +
-  geom_bar(stat = "identity") + 
-    theme_bw() + 
-   labs(
-    y = "sequencing reads",
-    x = "sample ID",
-    title = "herring stomachs WITHOUT herring reads")  +
-  theme(
-    axis.text.x = element_text(angle = 90, hjust = 0.95),
-    legend.position = "bottom",
-    legend.title = element_blank(),
-    legend.text = element_text(size = 8)
-  )  
-```
-
-let's say a sample need >1000 non-herring reads in order to establish its diet 
-```{r}
-herring_diet <- herring %>%
-  filter(taxon != "Clupea_pallasii") %>%
+herring_in_herring <- herring %>%
   group_by(sample_ID) %>%
-  mutate(ReadsPerSample = sum(reads)) %>%
-  filter(ReadsPerSample > 1000) %>%
-  mutate(read_prop = reads/ReadsPerSample)
+  mutate(total_reads = sum(reads),
+         prop_reads = reads/total_reads) %>%
+  filter(taxon == "Clupea_pallasii") %>%
+  mutate(non_herring_reads = total_reads - reads)
+
+ggplot(herring_in_herring, aes(x=reads)) + 
+  geom_histogram(binwidth = 500, fill = "steelblue", color = "black") +
+  labs(x = "herring reads in herring",
+    y = "Count"
+  ) +
+  theme_minimal()
+
+ggplot(herring_in_herring, aes(x=prop_reads)) + 
+  geom_histogram(binwidth = 0.01, fill = "steelblue", color = "black") +
+  labs(x = "proportion of herring reads in herring",
+    y = "Count"
+  ) +
+  theme_minimal()
+
+herring_discards_1 <- herring_in_herring %>%
+  filter(prop_reads > 0.95) 
+
+herring_discards_2 <- herring_in_herring %>%
+  filter(non_herring_reads < 1000)
 ```
 
+exclude samples if 95% of total reads are herring OR less than 1000 non-herring reads (doesn't have to meet both criteria, just one) 
+```{r}
+herring_filtered <- herring %>%
+  filter(!sample_ID %in% herring_discards_1$sample_ID) %>%
+  filter(!sample_ID %in% herring_discards_2$sample_ID)
+
+herring_filtered %>%
+  group_by(year) %>%
+  summarize(n_extracts = n_distinct(sample_ID),
+            n_fish = n_distinct(FishID))
+```
+
+
+out of curiousity, plot the distribution of pink salmon reads in herring stomachs 
+```{r}
+tmp <- herring_filtered %>%
+  group_by(sample_ID) %>%
+  mutate(total_reads = sum(reads),
+         prop_reads = reads/total_reads) %>%
+  filter(taxon != "Clupea_pallasii") %>%
+  mutate(total_reads_nonhost = sum(reads),
+         prop_reads_nonhost = reads/total_reads_nonhost) %>%
+  filter(taxon == "Oncorhynchus_gorbuscha")
+
+ggplot(tmp, aes(x=reads)) + 
+  geom_histogram(binwidth = 500, fill = "steelblue", color = "black") +
+  labs(x = "Pink salmon reads",
+    y = "Count"
+  ) +
+  theme_minimal()
+
+ggplot(tmp, aes(x=prop_reads)) + 
+  geom_histogram(binwidth = 0.01, fill = "steelblue", color = "black") +
+  labs(x = "Proportion (pink salmon/total reads)",
+    y = "Count"
+  ) +
+  theme_minimal()
+
+ggplot(tmp, aes(x=prop_reads_nonhost)) + 
+  geom_histogram(binwidth = 0.01, fill = "steelblue", color = "black") +
+  labs(x = "Proportion (pink salmon/nonhost reads)",
+    y = "Count"
+  ) +
+  theme_minimal()
+```
+
+double check 24-05-25 and 24-05-195 are actually herring stomachs (and not pink salmon)? 
+
+set a threshold that a species needs to have at least 1000 non-host reads (filter included above) and >=1% reads (non-host) to be considered present in the stomach?
+```{r}
+herring_diet <- herring_filtered %>%
+  filter(taxon != "Clupea_pallasii") %>% 
+  group_by(sample_ID) %>%
+  mutate(total_reads_nonhost = sum(reads),
+         prop_reads_nonhost = reads/total_reads_nonhost) %>%
+  filter(prop_reads_nonhost >= 0.01)
+
+total_samples_per_year_keepers <- herring_diet %>%
+  group_by(year) %>%
+  summarise(n_total = n_distinct(sample_ID), .groups = "drop")
+
+herring_diet_taxa <- herring_diet %>%
+  group_by(year, taxon) %>%
+  summarize(n_samples = n(), .groups = "drop") %>%
+  left_join(total_samples_per_year_keepers, by = "year") %>%
+  mutate(prop_samples = n_samples/n_total)
+
+herring_diet_taxa_wide <- herring_diet_taxa %>%
+  select(!n_total) %>%
+  pivot_wider(
+    names_from = year,
+    values_from = c(n_samples, prop_samples), values_fill = 0) %>%
+  arrange(desc(prop_samples_2023))
+```
+
+make list of detected prey (>5% in a given year, ie. at least 4 detections in 2023 or at least 2 detections in 2024)
+```{r}
+herring_diet_common <- herring_diet_taxa %>%
+  filter(prop_samples > 0.05) %>%
+    select(!n_total) %>%
+  pivot_wider(
+    names_from = year,
+    values_from = c(n_samples, prop_samples), values_fill = 0) %>%
+  arrange(desc(prop_samples_2023))
+```
+
+mean and range of taxa detected per stomach 
 ```{r}
 herring_diet %>%
-  ggplot(aes(x=sample_ID, y=reads, fill=taxon_common)) +
-  geom_bar(stat = "identity") + 
-    theme_bw() + 
-   labs(
-    y = "sequencing reads",
-    x = "sample ID",
-    title = "herring stomachs WITHOUT herring reads")  +
-  theme(
-    axis.text.x = element_text(angle = 90, hjust = 0.95),
-    legend.position = "right",
-    legend.title = element_blank(),
-    legend.text = element_text(size = 8)
-  )  
+  group_by(year, sample_ID) %>%
+  summarise(n = n_distinct(taxon)) %>%
+  group_by(year) %>%
+  summarise(min = min(n),
+            max = max(n),
+            mean = mean(n))
+```
 
-herring_diet %>%
-  ggplot(aes(x=sample_ID, y=read_prop, fill=taxon_common)) +
+mean proportion of reads of common species (when detected?)
+```{r}
+#2023 
+herring_diet_common_2023 <- herring_diet_common %>%
+  filter(n_samples_2023 > 0)
+
+#2024
+herring_diet_common_2024 <- herring_diet_common %>%
+  filter(n_samples_2024 > 0)
+
+#2023 
+reads_2023 <- herring_diet %>%
+  filter(year == 2023) %>%
+  filter(taxon %in% herring_diet_common_2023$taxon) %>%
+  group_by(taxon) %>%
+  summarize(
+    min   = min(prop_reads_nonhost, na.rm = TRUE),
+    q2.5 = quantile(prop_reads_nonhost, 0.025, na.rm = TRUE),
+    q25   = quantile(prop_reads_nonhost, 0.25, na.rm = TRUE),
+    median = median(prop_reads_nonhost, na.rm = TRUE),
+    mean   = mean(prop_reads_nonhost, na.rm = TRUE),
+    q75   = quantile(prop_reads_nonhost, 0.75, na.rm = TRUE),
+    q97.5 = quantile(prop_reads_nonhost, 0.975, na.rm = TRUE),
+    max   = max(prop_reads_nonhost, na.rm = TRUE)
+  )
+reads_2023
+
+ggplot(reads_2023, aes(y = taxon)) +
+  geom_errorbarh(aes(xmin = min, xmax = max), size = 0.5, height = 0, color = "black") +  # min-max line
+  geom_errorbarh(aes(xmin = q25, xmax = q75), size = 2, height = 0, color = "black") +
+  geom_point(aes(x = median), size = 3, color = "black") + 
+  #geom_point(aes(x = mean), size = 3, color = "grey") +                            
+  labs(x = "proportion of reads per stomach", y = "Taxon", 
+       title = "2023 Pacific herring stomach content") +
+  scale_y_discrete(limits = rev) +
+  theme_minimal()
+  
+tmp23 <- reads_2023 %>%
+  select(taxon, mean)
+
+herring_diet_common_2023 %>%
+  select(taxon, n_samples_2023, prop_samples_2023) %>%
+  left_join(tmp23)
+
+#2024 
+reads_2024 <- herring_diet %>%
+  filter(year == 2024) %>%
+  filter(taxon %in% herring_diet_common_2024$taxon) %>%
+  group_by(taxon) %>%
+  summarize(
+    min   = min(prop_reads_nonhost, na.rm = TRUE),
+    q2.5 = quantile(prop_reads_nonhost, 0.025, na.rm = TRUE),
+    q25   = quantile(prop_reads_nonhost, 0.25, na.rm = TRUE),
+    median = median(prop_reads_nonhost, na.rm = TRUE),
+    mean   = mean(prop_reads_nonhost, na.rm = TRUE),
+    q75   = quantile(prop_reads_nonhost, 0.75, na.rm = TRUE),
+    q97.5 = quantile(prop_reads_nonhost, 0.975, na.rm = TRUE),
+    max   = max(prop_reads_nonhost, na.rm = TRUE)
+  )
+reads_2024
+
+tmp24 <- reads_2024 %>%
+  select(taxon, mean)
+
+herring_diet_common_2024 %>%
+  select(taxon, n_samples_2024, prop_samples_2024) %>%
+  left_join(tmp24) %>%
+  arrange(desc(n_samples_2024))
+```
+
+plot
+```{r}
+library(colorspace)
+colors_42 <- qualitative_hcl(42, palette = "Dark 3")  # HCL-based qualitative palette
+
+herring_plot <- herring_diet %>%
+  ggplot(aes(x=sample_ID, y=prop_reads_nonhost, fill=taxon)) +
   geom_bar(stat = "identity") + 
     theme_bw() + 
+  scale_fill_manual(values = colors_42) +
+  facet_wrap(~year, scales = "free_x", ncol = 1) + 
    labs(
     y = "proportion of sequencing reads",
-    x = "sample ID",
-    title = "herring stomachs WITHOUT herring reads")  +
+    x = "FishID",
+    title = "herring stomach content")  +
+  scale_x_discrete(labels = setNames(herring_diet$FishID, herring_diet$sample_ID)) +  # replace sample_ID labels with FishID
   theme(
     axis.text.x = element_text(angle = 90, hjust = 0.95),
     legend.position = "right",
     legend.title = element_blank(),
     legend.text = element_text(size = 8)
-  )  
+  ) 
+
+herring_plot
+```
+
+save plot 
+```{r}
+ggsave(here("outputs/5_stomachs", "herring_plot.png"), plot = herring_plot, width = 12, height = 6, dpi = 300)
+```
+
+export herring diet dataframe 
+```{r}
+saveRDS(herring_diet, file = here("outputs/5_stomachs", "herring_stomachs.RDS"))
 ```
 
 
-
-## pink salmon stomach contents 
+## Pink salmon stomach contents 
 ```{r}
 pink <- taxon_table %>%
-  filter(Species == "PinkSalmon") 
+  filter(stomach == "PinkSalmon") %>%
+  filter(reads > 0)
 
-pink_taxa <- pink %>%
-  group_by(year, taxon) %>%
-  summarise(total = sum(reads)) %>%
-  pivot_wider(names_from = "year", values_from = "total")
+total_samples_per_year <- pink %>%
+  group_by(year) %>%
+  summarise(n_total = n_distinct(sample_ID), .groups = "drop")
 
-1314325/sum(pink_taxa$y_2023, na.rm = T) #prop of pink reads in 2023 data
-920777/sum(pink_taxa$y_2024, na.rm = T) #prop of pink reads in 2024 data
+pink_detections <- pink %>%
+  group_by(year, taxon) %>%       # group by species
+  summarise(n_samples = n(), .groups = "drop") %>%
+  left_join(total_samples_per_year, by = "year") %>%
+  mutate(prop_samples = n_samples/n_total)
 ```
 
-identify the 10 most common taxa in pink salmon stomachs 
+look closer at the proportion of pink reads from pink stomachs
 ```{r}
-pink_mostcommon_2023 <- pink %>%
-  filter(year == "y_2023") %>%
-  group_by(taxon) %>%
-  summarise(total = sum(reads)) %>%
-  arrange(desc(total)) %>%
-  filter(total > 200)
-
-pink_mostcommon_2024 <- pink %>%
-  filter(year == "y_2024") %>%
-  group_by(taxon) %>%
-  summarise(total = sum(reads)) %>%
-  arrange(desc(total)) %>%
-  filter(total > 1000)
-
-pink_mostcommon <- pink_mostcommon_2023 %>%
-  bind_rows(pink_mostcommon_2024) %>% select(taxon) %>% unique()
-
-pink <- pink %>%
-  mutate(taxon_common = ifelse(taxon %in% pink_mostcommon$taxon, taxon, "rare"))
-```
-
-
-plot samples WITH herring reads
-```{r}
-pink %>%
-  filter(reads > 0) %>%
-  ggplot(aes(x=sample_ID, y=reads, fill=taxon_common)) +
-  geom_bar(stat = "identity") + 
-    theme_bw() + 
-   labs(
-    y = "sequencing reads",
-    x = "sample ID",
-    title = "pink stomachs with pink reads")  +
-  theme(
-    axis.text.x = element_text(angle = 90, hjust = 0.95),
-    legend.position = "bottom",
-    legend.title = element_blank(),
-    legend.text = element_text(size = 8)
-  )  
-```
-
-```{r}
-pink %>%
-  filter(reads > 0) %>%
-  filter(taxon_common != "Oncorhynchus_gorbuscha") %>%
-  ggplot(aes(x=sample_ID, y=reads, fill=taxon_common)) +
-  geom_bar(stat = "identity") + 
-    theme_bw() + 
-   labs(
-    y = "sequencing reads",
-    x = "sample ID",
-    title = "pink stomachs WITHOUT pink reads")  +
-  theme(
-    axis.text.x = element_text(angle = 90, hjust = 0.95),
-    legend.position = "bottom",
-    legend.title = element_blank(),
-    legend.text = element_text(size = 8)
-  )  
-```
-
-let's say a sample need >1000 non-herring reads in order to establish its diet 
-```{r}
-pink_diet <- pink %>%
-  filter(taxon != "Oncorhynchus_gorbuscha") %>%
+pink_in_pink <- pink %>%
   group_by(sample_ID) %>%
-  mutate(ReadsPerSample = sum(reads)) %>%
-  filter(ReadsPerSample > 1000) %>%
-  mutate(read_prop = reads/ReadsPerSample)
+  mutate(total_reads = sum(reads),
+         prop_reads = reads/total_reads) %>%
+  filter(taxon == "Oncorhynchus_gorbuscha") %>%
+  mutate(non_pink_reads = total_reads - reads)
+
+ggplot(pink_in_pink, aes(x=reads)) + 
+  geom_histogram(binwidth = 500, fill = "steelblue", color = "black") +
+  labs(x = "pink reads in pink",
+    y = "Count"
+  ) +
+  theme_minimal()
+
+ggplot(pink_in_pink, aes(x=prop_reads)) + 
+  geom_histogram(binwidth = 0.01, fill = "steelblue", color = "black") +
+  labs(x = "proportion of pink reads in pink",
+    y = "Count"
+  ) +
+  theme_minimal()
+
+pink_discards_1 <- pink_in_pink %>%
+  filter(prop_reads > 0.95) 
+
+pink_discards_2 <-  pink_in_pink %>%
+  filter(non_pink_reads < 1000)
 ```
 
+exclude samples if 95% of total reads are pink OR less than 1000 non-pink reads (doesn't have to meet both criteria, just one) 
+```{r}
+pink_filtered <- pink %>%
+  filter(!sample_ID %in% pink_discards_1$sample_ID) %>%
+  filter(!sample_ID %in% pink_discards_2$sample_ID)
+
+pink_filtered %>%
+  group_by(year) %>%
+  summarize(n_extracts = n_distinct(sample_ID),
+            n_fish = n_distinct(FishID))
+```
+
+
+plot the distribution of herring reads in pink salmon stomachs 
+```{r}
+tmp <- pink_filtered %>%
+  group_by(sample_ID) %>%
+  mutate(total_reads = sum(reads),
+         prop_reads = reads/total_reads) %>%
+  filter(taxon != "Oncorhynchus_gorbuscha") %>%
+  mutate(total_reads_nonhost = sum(reads),
+         prop_reads_nonhost = reads/total_reads_nonhost) %>%
+  filter(taxon == "Clupea_pallasii")
+
+ggplot(tmp, aes(x=reads)) + 
+  geom_histogram(binwidth = 500, fill = "steelblue", color = "black") +
+  labs(x = "Herring reads",
+    y = "Count"
+  ) +
+  theme_minimal()
+
+ggplot(tmp, aes(x=prop_reads)) + 
+  geom_histogram(binwidth = 0.01, fill = "steelblue", color = "black") +
+  labs(x = "Proportion (herring/total reads)",
+    y = "Count"
+  ) +
+  theme_minimal()
+
+ggplot(tmp, aes(x=prop_reads_nonhost)) + 
+  geom_histogram(binwidth = 0.01, fill = "steelblue", color = "black") +
+  labs(x = "Proportion (herring/nonhost reads)",
+    y = "Count"
+  ) +
+  theme_minimal()
+```
+
+double check 24-06-468, 24-06-284, 24-06-451, and others(?) are actually pink salmon stomachs (and not herring)
+
+maybe set a threshold that a species needs to have >=1% reads (non-host) to be considered present in the stomach?  
+```{r}
+pink_diet <- pink_filtered %>%
+  filter(taxon != "Oncorhynchus_gorbuscha") %>% 
+  filter(taxon != "Oncorhynchus_1") %>%
+  group_by(sample_ID) %>%
+  mutate(total_reads_nonhost = sum(reads),
+         prop_reads_nonhost = reads/total_reads_nonhost) %>%
+  filter(prop_reads_nonhost > 0.01)
+
+total_samples_per_year_keepers <- pink_diet %>%
+  group_by(year) %>%
+  summarise(n_total = n_distinct(sample_ID), .groups = "drop")
+
+pink_diet_keepers <- pink_diet %>%
+  group_by(year, taxon) %>%
+  summarize(n_samples = n(), .groups = "drop") %>%
+  left_join(total_samples_per_year_keepers, by = "year") %>%
+  mutate(prop_samples = n_samples/n_total)
+
+pink_diet_keepers_wide <- pink_diet_keepers %>%
+  select(!n_total) %>%
+  pivot_wider(
+    names_from = year,
+    values_from = c(n_samples, prop_samples), values_fill = 0) %>%
+  arrange(desc(prop_samples_2023))
+```
+
+make list of detected prey (>5% in a given year, ie. at least 4 detections in 2023 or at least 2 detections in 2024)
+```{r}
+pink_diet_common <- pink_diet_keepers %>%
+  filter(prop_samples > 0.05) %>%
+    select(!n_total) %>%
+  pivot_wider(
+    names_from = year,
+    values_from = c(n_samples, prop_samples), values_fill = 0) %>%
+  arrange(desc(prop_samples_2023))
+```
+
+mean and range of taxa detected per stomach 
 ```{r}
 pink_diet %>%
-  ggplot(aes(x=sample_ID, y=reads, fill=taxon_common)) +
-  geom_bar(stat = "identity") + 
-    theme_bw() + 
-   labs(
-    y = "sequencing reads",
-    x = "sample ID",
-    title = "pink stomachs WITHOUT pink reads")  +
-  theme(
-    axis.text.x = element_text(angle = 90, hjust = 0.95),
-    legend.position = "right",
-    legend.title = element_blank(),
-    legend.text = element_text(size = 8)
-  )  
+  group_by(year, sample_ID) %>%
+  summarise(n = n_distinct(taxon)) %>%
+  group_by(year) %>%
+  summarise(min = min(n),
+            max = max(n),
+            mean = mean(n))
+```
 
-pink_diet %>%
-  ggplot(aes(x=sample_ID, y=read_prop, fill=taxon_common)) +
+mean proportion of reads of common species (when detected?)
+```{r}
+#2023 
+pink_diet_common_2023 <- pink_diet_common %>%
+  filter(n_samples_2023 > 0)
+
+#2024
+pink_diet_common_2024 <- pink_diet_common %>%
+  filter(n_samples_2024 > 0)
+
+#2023 
+reads_2023 <- pink_diet %>%
+  filter(year == 2023) %>%
+  filter(taxon %in% pink_diet_common_2023$taxon) %>%
+  group_by(taxon) %>%
+  summarize(
+    min   = min(prop_reads_nonhost, na.rm = TRUE),
+    q2.5 = quantile(prop_reads_nonhost, 0.025, na.rm = TRUE),
+    q25   = quantile(prop_reads_nonhost, 0.25, na.rm = TRUE),
+    median = median(prop_reads_nonhost, na.rm = TRUE),
+    mean   = mean(prop_reads_nonhost, na.rm = TRUE),
+    q75   = quantile(prop_reads_nonhost, 0.75, na.rm = TRUE),
+    q97.5 = quantile(prop_reads_nonhost, 0.975, na.rm = TRUE),
+    max   = max(prop_reads_nonhost, na.rm = TRUE)
+  )
+reads_2023
+
+ggplot(reads_2023, aes(y = taxon)) +
+  geom_errorbarh(aes(xmin = min, xmax = max), size = 0.5, height = 0, color = "black") +  # min-max line
+  geom_errorbarh(aes(xmin = q25, xmax = q75), size = 2, height = 0, color = "black") +
+  geom_point(aes(x = median), size = 3, color = "black") + 
+  #geom_point(aes(x = mean), size = 3, color = "grey") +                            
+  labs(x = "proportion of reads per stomach", y = "Taxon", 
+       title = "2023 pink salmon stomach content") +
+  scale_y_discrete(limits = rev) +
+  theme_minimal()
+  
+tmp23 <- reads_2023 %>%
+  select(taxon, mean)
+
+pink_diet_common_2023 %>%
+  select(taxon, n_samples_2023, prop_samples_2023) %>%
+  left_join(tmp23)
+
+#2024 
+reads_2024 <- pink_diet %>%
+  filter(year == 2024) %>%
+  filter(taxon %in% pink_diet_common_2024$taxon) %>%
+  group_by(taxon) %>%
+  summarize(
+    min   = min(prop_reads_nonhost, na.rm = TRUE),
+    q2.5 = quantile(prop_reads_nonhost, 0.025, na.rm = TRUE),
+    q25   = quantile(prop_reads_nonhost, 0.25, na.rm = TRUE),
+    median = median(prop_reads_nonhost, na.rm = TRUE),
+    mean   = mean(prop_reads_nonhost, na.rm = TRUE),
+    q75   = quantile(prop_reads_nonhost, 0.75, na.rm = TRUE),
+    q97.5 = quantile(prop_reads_nonhost, 0.975, na.rm = TRUE),
+    max   = max(prop_reads_nonhost, na.rm = TRUE)
+  )
+reads_2024
+
+tmp24 <- reads_2024 %>%
+  select(taxon, mean)
+
+pink_diet_common_2024 %>%
+  select(taxon, n_samples_2024, prop_samples_2024) %>%
+  left_join(tmp24) %>%
+  arrange(desc(n_samples_2024))
+```
+
+plot
+```{r}
+colors_19 <- qualitative_hcl(19, palette = "Dark 3")  # HCL-based qualitative palette
+
+pink_plot <- pink_diet %>%
+  ggplot(aes(x=sample_ID, y=prop_reads_nonhost, fill=taxon)) +
   geom_bar(stat = "identity") + 
     theme_bw() + 
+  scale_fill_manual(values = colors_19) +
+  facet_wrap(~year, scales = "free_x", ncol = 1) + 
    labs(
     y = "proportion of sequencing reads",
-    x = "sample ID",
-    title = "pink stomachs WITHOUT pink reads")  +
+    x = "FishID",
+    title = "pink salmon stomach content")  +
+  scale_x_discrete(labels = setNames(pink_diet$FishID, pink_diet$sample_ID)) +  # replace sample_ID labels with FishID
   theme(
     axis.text.x = element_text(angle = 90, hjust = 0.95),
     legend.position = "right",
     legend.title = element_blank(),
     legend.text = element_text(size = 8)
-  )  
+  ) 
+
+pink_plot
+
+
 ```
 
+save plot 
+```{r}
+ggsave(here("outputs/5_stomachs", "pink_plot.png"), plot = pink_plot, width = 12, height = 6, dpi = 300)
+```
 
+export prey detection table for pink salmon stomachs 
+```{r}
+saveRDS(pink_diet, file = here("outputs/5_stomachs", "pinksalmon_stomachs.RDS"))
+```
 
+look at the metadata
+```{r}
+metadata <- read.csv("../pinksalmon_and_herring_metadata.csv") %>%
+  rename(sample_ID = extraction_ID) %>%
+  rename(stomach = Species)
+
+herring_meta <- metadata %>%
+  filter(stomach == "PacificHerring")
+
+herring_meta %>%
+  group_by(collection_year) %>%
+  summarise(sites = unique(location1))
+
+herring_meta %>%
+  group_by(collection_year) %>%
+  summarize(n_fish = n_distinct(FishID))
+
+herring_meta %>%
+  group_by(collection_year) %>%
+  summarize(n_fish = n_distinct(sample_ID))
+```
+
+```{r}
+pink_meta <- metadata %>%
+  filter(stomach == "PinkSalmon")
+
+pink_meta %>%
+  group_by(collection_year) %>%
+  summarise(sites = unique(location1))
+
+pink_meta %>%
+  group_by(collection_year) %>%
+  summarize(n_fish = n_distinct(FishID))
+
+pink_meta %>%
+  group_by(collection_year) %>%
+  summarize(n_fish = n_distinct(sample_ID))
+```
 

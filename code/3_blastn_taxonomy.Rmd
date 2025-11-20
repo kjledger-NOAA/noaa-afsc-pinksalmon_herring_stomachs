@@ -5,7 +5,7 @@ date: "2025-11-14"
 output: html_document
 ---
 
-taxonomic id of blastn output. this code is useful for assigning higher classifications (genus, family, etc) for ASVs that have multispecies hits.   
+taxonomic id of blastn output. this code including assigning higher classifications (genus, family, etc) for ASVs that have multispecies hits.   
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
@@ -16,11 +16,12 @@ library(dplyr)
 library(tidyr)
 library(stringr)
 library(tidyverse)
+library(here)
 ```
 
 ## load output from blastn 
 ```{r load-output-from-taxonkit}
-taxonomy <-read.delim("../fastq/trimmed/filtered/outputs/blastnresults", header = FALSE, na.strings=c(""," ","NA"))
+taxonomy <-read.delim(here("outputs/3_blastn_taxonomy","blastnresults"), header = FALSE, na.strings=c(""," ","NA"))
 head(taxonomy)
 colnames(taxonomy) <- c("ASV", "subject", "pident", "length", "mismatch", "gapopen",
   "qstart", "qend", "sstart", "send", "evalue", "bitscore", "qseq", "sseq")
@@ -28,12 +29,11 @@ colnames(taxonomy) <- c("ASV", "subject", "pident", "length", "mismatch", "gapop
 
 ## filter the data frame to just work with the curated ASVs (post-LULU)
 ```{r}
-asv_table <- read.csv("~/Documents/noaa-afsc-pinksalmon_herring_stomachs/ref/asvtable_lulu98.csv")
+asv_table <- read.csv("~/Documents/noaa-afsc-pinksalmon_herring_stomachs/outputs/2_lulu/asvtable_lulu98.csv")
 
 taxonomy <- taxonomy %>%
   filter(ASV %in% asv_table$X)
 ```
-
 
 ## clean up the header and seperate subject 
 ```{r}
@@ -61,6 +61,14 @@ tax_df <- taxonomy %>%
   unique() %>%
   filter(!str_detect(species, "_x_")) %>% ##remove hybrids
   mutate(species_name = str_replace_all(species, "_", " "))   
+```
+
+## check what non-fish are here
+```{r}
+not_Actinopteri <- tax_df %>%
+  filter(class != "Actinopteri") 
+
+unique(not_Actinopteri$species)
 ```
 
 ## now look at the fish and figure out what fish taxa are in/out of our range
@@ -103,7 +111,7 @@ spp_distribution <- ecosystem(to_check_range_validated$species) %>%
   select(Species, EcosystemName) %>%
   unique()
 
-#add column to designate if we will consider a species as "in range"- for this study, this will be NE Pacific 
+#add column to designate if we will consider a species as "in range"- for this study, this will be the Gulf of Alaska 
 spp_distribution_range <- spp_distribution %>%
   mutate(in_range = ifelse(is.na(EcosystemName), NA, "no"),
          #in_range = ifelse(EcosystemName == "Pacific Ocean", "yes", in_range),
@@ -114,35 +122,31 @@ in_range_df <- spp_distribution_range %>%
   filter(in_range == "yes")
 ```
 
-check to make sure the range filter worked okay
+check to make sure the range filter worked okay and no species were removed that should obviously be retained
 ```{r}
 removed <- anti_join(to_check_range_validated, in_range_df, by = c("species" = "Species"))
 ```
 
-for now, i'm being more restrictive and using the GofA filter. might consider including all Pacific Ocean species? 
-
-
-Polypera greeni - Liparis greeni 
-ASV 68 - Sus scrofa 
-remove the non-fish... 
-
-
-## what non-fish are here? 
+check if any species referred to by their synonym are in range
 ```{r}
-not_Actinopteri <- tax_df %>%
-  filter(class != "Actinopteri") 
-
-unique(not_Actinopteri$species)
+syn_in_range <- syn %>% filter(Species %in% in_range_df$Species)
 ```
 
-## keep only the "in range" fish species in the taxon dataframe - and all non-fish - and the positive control species (Acipenser fulvescens)
+## keep only the "in range" fish species in the taxon dataframe - and all non-fish - and the positive control species (Acipenser fulvescens) - and the synonyms of in-range fish 
 ```{r}
-in_range_spp <- unique(in_range_df$Species)
-
-taxa_keepers <- c(in_range_spp, unique(not_Actinopteri$species), "Acipenser fulvescens", "Ammodytes personatus")
+taxa_keepers <- c(unique(in_range_df$Species), unique(not_Actinopteri$species_name), "Acipenser fulvescens", unique(syn_in_range$synonym))
 
 taxon_df <- tax_df %>%
   filter(species_name %in% taxa_keepers)
+
+#rename synonyms with validated names 
+taxon_df <- taxon_df %>%
+  mutate(species = ifelse(species == "Gadus_ogac", "Gadus_macrocephalus", species),
+         species = ifelse(species == "Embassichthys_bathybius", "Microstomus_bathybius", species), 
+         genus = ifelse(species == "Embassichthys_bathybius", "Microstomus", genus), 
+         species = ifelse(species == "Polypera_greeni", "Liparis_greeni", species),
+         genus = ifelse(species == "Polypera_greeni", "Liparis", genus),
+         species = ifelse(species == "Gasterosteus_gymnurus", "Gasterosteus_aculeatus", species))
 ```
 
 
@@ -180,9 +184,6 @@ seq_id_diff <- taxon_df %>%
        mutate(top_perc = max(seq_percID)) %>% # designate the highest % id for the best taxonomic hit in each sequence (in some, but not all cases, this is 100%)   
       mutate(diff = top_perc - seq_percID) %>% # calculate the difference between the % identity of the top hit and each subsequent taxonomic hit
         arrange(diff)
-
-seq_id_diff %>%
-  filter(diff > 0)
 ```
 
 Now you have the single best entry for each species for each sequence ranked and with the difference between the first and second ranked entries calculated.
@@ -326,6 +327,7 @@ single_kingdom <- keepers %>%
 sorted_tax_df <- bind_rows(single_kingdom, single_phylum, single_class, single_order, single_family, single_genus, singleton_df)
 ```
 
+
 ## Create output taxonomy data frames
 ```{r}
 uncollapsed_taxonomy <- sorted_tax_df %>%
@@ -335,11 +337,61 @@ uncollapsed_taxonomy <- sorted_tax_df %>%
 
 # and then collapse that down to just a single taxon per ASV
 collapsed_taxonomy <- uncollapsed_taxonomy %>%
-  select(ASV, taxon, taxonomic_level) %>%
+  mutate(species = ifelse(taxonomic_level == "family", NA, species),
+         genus = ifelse(taxonomic_level == "family", NA, genus),
+         species = ifelse(taxonomic_level == "genus", NA, species),
+         family = ifelse(taxonomic_level == "order", NA, family)) %>%
+  select(ASV, taxon, taxonomic_level, species, genus, family, order, class, phylum, kingdom) %>%
   unique()
 ```
 
 ```{r}
-write.csv(uncollapsed_taxonomy, "../outputs/uncollaspsed_taxonomy.csv")
-write.csv(collapsed_taxonomy, "../outputs/collaspsed_taxonomy.csv")
+write.csv(uncollapsed_taxonomy, here("outputs/3_blastn_taxonomy", "uncollaspsed_taxonomy.csv"), row.names = F)
+#write.csv(collapsed_taxonomy, here("outputs/3_blastn_taxonomy","collaspsed_taxonomy.csv"), row.names = F)
 ```
+
+
+## checking a few taxonomic things 
+```{r}
+uncollapsed_taxonomy <- read.csv(here("outputs/3_blastn_taxonomy", "uncollaspsed_taxonomy.csv"))
+
+salmon <- uncollapsed_taxonomy %>%
+  filter(taxon == "Oncorhynchus")
+```
+
+## create some groups for the genus level assignments
+```{r}
+uncollapsed_taxonomy <- uncollapsed_taxonomy %>%
+  mutate(taxon = ifelse(ASV == "ASV8", "Oncorhynchus_1", taxon),
+         taxon = ifelse(ASV == "ASV76", "Oncorhynchus_2", taxon),
+         taxon = ifelse(ASV == "ASV152", "Oncorhynchus_3", taxon),)
+```
+
+Oncorhynchus_1 - gorbuscha or nerka
+Oncorhynchus_2 - keta or nerka 
+Oncorhynchus_3 - clarkii or mykiss 
+
+redo the collapsed 
+```{r}
+# and then collapse that down to just a single taxon per ASV
+collapsed_taxonomy <- uncollapsed_taxonomy %>%
+  mutate(species = ifelse(taxonomic_level == "family", NA, species),
+         genus = ifelse(taxonomic_level == "family", NA, genus),
+         species = ifelse(taxonomic_level == "genus", NA, species),
+         family = ifelse(taxonomic_level == "order", NA, family)) %>%
+  select(ASV, taxon, taxonomic_level, species, genus, family, order, class, phylum, kingdom) %>%
+  unique()
+
+write.csv(collapsed_taxonomy, here("outputs/3_blastn_taxonomy","collaspsed_taxonomy.csv"), row.names = F)
+```
+
+compare the salmon ASVs 
+```{r}
+salmon_ASVs <- collapsed_taxonomy %>%
+  filter(genus == "Oncorhynchus")
+
+temp <- seq_id_diff %>%
+  filter(ASV %in% salmon_ASVs$ASV) %>%
+  arrange(ASV)
+```
+

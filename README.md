@@ -28,9 +28,9 @@ makeblastdb -in MIDORI2_UNIQ_NUC_GB267_srRNA_BLAST.fasta \
             -dbtype nucl \
             -out MIDORI2_UNIQ_NUC_GB267_srRNA_BLAST_db/MIDORI2_UNIQ_NUC_GB267_srRNA_BLAST_db
 
-blastn -query fastq/trimmed/filtered/outputs/myasvs.fasta \
+blastn -query outputs/1_sequence_filtering/myasvs.fasta \
        -db /Users/kimberly.ledger/Documents/metaprobes_BeringSea2024/MIDORI2_UNIQ_NUC_GB267_srRNA_BLAST_db/MIDORI2_UNIQ_NUC_GB267_srRNA_BLAST_db \
-       -out fastq/trimmed/filtered/outputs/blastnresults \
+       -out outputs/3_blastn_taxonomy/blastnresults \
        -perc_identity 96 -qcov_hsp_perc 100 \
        -outfmt "6 qseqid sseqid pident length mismatch gapopen qstart qend sstart send evalue bitscore sscinames staxids" \
        -num_threads 10

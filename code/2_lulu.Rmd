@@ -29,25 +29,25 @@ dir.create("/Users/kimberly.ledger/Documents/noaa-afsc-pinksalmon_herring_stomac
 
 ## Run in terminal 
 ## may need to activate conda environment first: conda activate cutadptenv
-## (base) akcjm146-kl22:noaa-afsc-pinksalmon_herring_stomachs kimberly.ledger$ makeblastdb -in fastq/trimmed/filtered/outputs/myasvs.fasta -dbtype nucl -out ref/repseq_db/repseq_db
+## (base) akcjm146-kl22:noaa-afsc-pinksalmon_herring_stomachs kimberly.ledger$ makeblastdb -in outputs/1_sequence_filtering/myasvs.fasta -dbtype nucl -out ref/repseq_db/repseq_db
 
 list.files("ref/repseq_db/")
 
 ## Back in the terminal
 ## Then blast the OTUs against the database
-## (base) akcjm146-kl22:noaa-afsc-pinksalmon_herring_stomachs kimberly.ledger$ blastn -db ref/repseq_db/repseq_db -outfmt '6 qseqid sseqid pident' -out ref/match_list.txt -qcov_hsp_perc 80 -perc_identity 84 -query fastq/trimmed/filtered/outputs/myasvs.fasta
+## (base) akcjm146-kl22:noaa-afsc-pinksalmon_herring_stomachs kimberly.ledger$ blastn -db ref/repseq_db/repseq_db -outfmt '6 qseqid sseqid pident' -out outputs/2_lulu/match_list.txt -qcov_hsp_perc 80 -perc_identity 84 -query outputs/1_sequence_filtering/outputs/myasvs.fasta
 ```
 
 read in the asv table and match list 
 ```{r}
-asv_table <- read.csv("~/Documents/noaa-afsc-pinksalmon_herring_stomachs/fastq/trimmed/filtered/outputs/ASVtable.csv") 
+asv_table <- read.csv("~/Documents/noaa-afsc-pinksalmon_herring_stomachs/outputs/1_sequence_filtering/ASVtable.csv") 
 rownames(asv_table) <- asv_table$X
 asv_table <- asv_table %>% select(!X) %>% mutate(across(everything(), as.numeric)) %>% as.matrix() %>% t() 
 
 asv_df <- as.data.frame(asv_table)
 rownames(asv_df) <- rownames(asv_table)
 
-matchlist <- read.table("~/Documents/noaa-afsc-pinksalmon_herring_stomachs/ref/match_list.txt", header=FALSE,as.is=TRUE, stringsAsFactors=FALSE)
+matchlist <- read.table("~/Documents/noaa-afsc-pinksalmon_herring_stomachs/outputs/2_lulu/match_list.txt", header=FALSE,as.is=TRUE, stringsAsFactors=FALSE)
 ```
 
 Run Lulu
@@ -74,6 +74,6 @@ curated_result_98$otu_map
 ```
 
 ```{r}
-write.csv(curated_result_98$curated_table, "~/Documents/noaa-afsc-pinksalmon_herring_stomachs/ref/asvtable_lulu98.csv")
-write.csv(curated_result_98$otu_map, "~/Documents/noaa-afsc-pinksalmon_herring_stomachs/ref/asvmap_lulu98.csv")
+write.csv(curated_result_98$curated_table, "~/Documents/noaa-afsc-pinksalmon_herring_stomachs/outputs/2_lulu/asvtable_lulu98.csv")
+write.csv(curated_result_98$otu_map, "~/Documents/noaa-afsc-pinksalmon_herring_stomachs/outputs/2_lulu/asvmap_lulu98.csv")
 ```

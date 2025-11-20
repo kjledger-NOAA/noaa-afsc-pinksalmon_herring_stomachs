@@ -147,7 +147,7 @@ head(track)
 
 export dada2 filtering summary 
 ```{r}
-out_path <- file.path(path, "filtered", "outputs")
+out_path <- path <- "/Users/kimberly.ledger/Documents/noaa-afsc-pinksalmon_herring_stomachs/outputs/1_sequence_filtering/"
 
 write.csv(track, file = file.path(out_path, "track.csv"))
 ```
